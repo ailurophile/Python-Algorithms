@@ -1,5 +1,23 @@
 import time #this is a Python library
+def counting_sort(array, max_value):
+    """run_time O(n) when max_val +~ len(array).  Array contents integers
+    betwen 0 & max_value. Returns sorted array."""
+    n = len(array)  # number of elements in array
+    if n < 2:
+        return array
+    counts = [0 for _ in range(max_value+1)]
+    output_array = [None for _ in range(n+1)]
+    for i in range(n) :
+        counts[array[i]] += 1  #count occurences of inputs
+    for i in range(1,max_value+1):
+        counts[i] += counts[i-1]  #add number of entries smaller than current value
+    for i in range(n-1,-1,-1):
+        output_array[counts[array[i]]] = array[i]  #place value in appropriate position of output array
+        counts[array[i]] -= 1  #ensure duplicate values go into empty slot in output
+    return output_array
+
 def quicksort(L):
+    """Recursive sort using len(L) additional space"""
     middle= len(L)/2
     if middle < 1 :
         return L
@@ -12,10 +30,9 @@ def quicksort(L):
         else:
             right.append(item)
     return quicksort(left) + [pivot] + quicksort(right)
-"""Implement in-place quick sort in Python.
-Input a list.
-Output a sorted list."""
+
 def inline_quicksort(array):
+    """Sorts array in place"""
     if array == None or len(array) < 2:
         return array
     front_index = 0
@@ -85,6 +102,11 @@ def mergesort(L,begin,end):
         merge(L,begin,middle,end)
     return L
 if __name__ == '__main__':
+    print "Counting sort test"
+    input = [7,2,5,3,3,7,5,3,8,2,4,3]
+    empty = []
+    print counting_sort(input, 8)
+    print counting_sort(empty,8)
     print "inline_quicksort test"
     test = [21, 4, 1, 3, 9, 20, 25, 6, 21, 14]
     print inline_quicksort(test)
