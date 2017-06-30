@@ -1,7 +1,9 @@
-import time #this is a Python library
+import time
+import math
 def counting_sort(array, max_value):
-    """run_time O(n) when max_val +~ len(array).  Array contents integers
-    betwen 0 & max_value. Returns sorted array."""
+    """run_time O(n) when max_val =~ len(array).  Array contents integers
+    betwen 0 & max_value. Returns sorted array. Preserves order of equal values
+    (stable sort) by using array length plus max_value extra space."""
     n = len(array)  # number of elements in array
     if n < 2:
         return array
@@ -75,7 +77,7 @@ def merge(L,begin,middle,end):
 
             if i > middle-begin:
                 #print("L before Right fill = ",L)
-                fill(L,Right,j,k+1,end)
+#                fill(L,Right,j,k+1,end)
                 return L
 
         else:
@@ -86,7 +88,15 @@ def merge(L,begin,middle,end):
                 #print("L before Left fill = ",L)
                 fill(L,Left,i,k+1,end)
                 return L
-
+def merge_sort(L):
+    begin = 0
+    end = len(L) - 1
+    middle = (begin + end)/2
+    if middle < end:
+        mergesort(L,begin, middle)
+        mergesort(L,middle+1,end)
+        merge(L,begin,middle,end)
+    return L
 def time_execution(code):
    start = time.clock()  # start the clock
    result = eval(code)  # evaluate any string as if it is a Python command
@@ -102,11 +112,9 @@ def mergesort(L,begin,end):
         merge(L,begin,middle,end)
     return L
 if __name__ == '__main__':
-    print "Counting sort test"
-    input = [7,2,5,3,3,7,5,3,8,2,4,3]
+    input = [7,2,5,3,3,7,5,3,8,2,14,13]
     empty = []
-    print counting_sort(input, 8)
-    print counting_sort(empty,8)
+
     print "inline_quicksort test"
     test = [21, 4, 1, 3, 9, 20, 25, 6, 21, 14]
     print inline_quicksort(test)
@@ -123,6 +131,13 @@ if __name__ == '__main__':
 
     print mergesort(C,0,len(C)-1)
     print mergesort(D,0,len(D)-1)
+    print mergesort(input,0,len(input)-1)
+    print merge_sort(A)
+
+    print merge_sort(C)
+    print merge_sort(D)
+    print merge_sort(input)
+    print merge_sort(F)
 
 
 
