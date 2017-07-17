@@ -21,17 +21,22 @@ def count_coins_to_value(value):
     if value < 1:
         return 0
     coins = [25,10,5,1]
-    return count_coins(value,coins,0)
+    counts = [0 for _ in range(value + 1)]  #for memoization
+    count_coins(value,coins,0, counts)
+    return counts[value]
 
-def count_coins(value,coins,index):
+def count_coins(value,coins,index, counts):
+    if counts[value] != 0:
+        return counts[value]
     coin = coins[index]
     if coin == 1:
-        return 1 #only one way to make value using pennies
+        return 1  #only one way to make value using pennies
     index += 1
     count = 0
     for i in range(value/coin):
-        count += count_coins(value - i*coin, coins, index)
-    count += count_coins(value%coin, coins, index)
+        count += count_coins(value - i*coin, coins, index, counts)
+    count += count_coins(value%coin, coins, index, counts)
+    counts[value] = count
     return count
 
 
