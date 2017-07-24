@@ -39,12 +39,46 @@ def count_coins(value,coins,index, counts):
     counts[value] = count
     return count
 
+def queen_placements():
+    """Returns the number of ways to safely position 8 queens on an 8x8 chess board"""
+    results = []
+    for col in range(8):
+        place_queens([], 0, col,results)
+
+    return results
+
+
+def place_queens( queens_array, row, column, paths):
+    results = []
+
+    if is_path_clear(queens_array, row, column):
+    #place queen on grid
+
+        if row == 7:
+            paths.append(queens_array + [(row,column)])#valid placement of 8 found
+            return
+#        #get placement for next row
+        for col in range(8):
+            placement = place_queens(queens_array + [(row,column)], row + 1, col, paths)
+
+
+
+def is_path_clear(array, row, column):
+    """returns false if an entry is array shares a row, column or diagonal with (row,column)
+    else returns True"""
+    for spot in array:
+        if spot[0] == row or spot[1] == column:
+            return False
+        if abs(spot[0] - row) == abs(spot[1] - column):
+            return False
+    return True
+
+
 
 if __name__ == '__main__':
-    print number_of_paths(5)
-    print number_of_paths(-4)
-    print number_of_paths(0)
-    print number_of_paths(6)
+    placements = queen_placements()
+    print "placement count = %d" % len(placements)
+    print placements
     print("testing coins")
     print count_coins_to_value(12)
     print count_coins_to_value(10)
