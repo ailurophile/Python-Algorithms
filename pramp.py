@@ -46,8 +46,17 @@ def counting_sort(tuples):
         output[counts[tuple[1]]] = tuple
         counts[tuple[1]] -= 1
     return output[-1:1:-1]
-
+#    return output[1:]
+from collections import Counter
+def word_counter_engine(document):
+    words = document.split(' ')
+    words_only = []
+    for word in words:
+        words_only.append(''.join([i for i in word.lower() if i.isalpha()]))
+    word_count = Counter(words_only)
+    return word_count.most_common()
 
 if __name__ == '__main__':
   document = "Practice makes perfect. you'll only get Perfect by practice. just practice!"
   print word_count_engine(document)
+  print word_counter_engine(document)
