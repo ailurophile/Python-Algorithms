@@ -1,16 +1,11 @@
 from collections import defaultdict
+from collections import Counter
+
 def word_count_engine(document):
-    """Implement a document scanning function wordCountEngine,
-     which receives a string document and returns a list of all
-     unique words in it and their number of occurrences,
-     sorted by the number of occurrences in a descending order.
-      Assume that all letters are in english alphabet. Your function
-       should be case-insensitive, so for instance, the words Perfect
-        and perfect should be considered the same word.
-        The engine should strip out punctuation (even in the middle of a word)
-        and use whitespaces to separate words. Analyze the time and space
-        complexities of your solution. Try to optimize for time while keeping
-        a polynomial space complexity."""
+    """Document scanning function wordCountEngine,
+     Input: document string
+     Output: list of tuples of lower-cased words with punctuation removed and their frequencies
+     in descending order."""
 
     words = document.split(' ')
     words_only = []
@@ -47,8 +42,11 @@ def counting_sort(tuples):
         counts[tuple[1]] -= 1
     return output[-1:1:-1]
 #    return output[1:]
-from collections import Counter
 def word_counter_engine(document):
+    """Document scanning function wordCountEngine using Counter object
+    Input: document string
+    Output: list of tuples of lower-cased words with punctuation removed and their frequencies
+    in descending order."""
     words = document.split(' ')
     words_only = []
     for word in words:
