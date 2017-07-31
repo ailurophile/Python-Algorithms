@@ -54,7 +54,56 @@ def word_counter_engine(document):
     word_count = Counter(words_only)
     return word_count.most_common()
 
+def spiral_copy(inputMatrix):
+    """Input: a 2D array inputMatrix of integers
+    Output: 1D array of integers from inputMatrix in a spiral order, clockwise."""
+
+    if inputMatrix == None:
+        return []
+    row_stop = len(inputMatrix)  #final position to process in current row
+    column_stop = len(inputMatrix[0]) #final position to process in current column
+    steps =  row_stop * column_stop
+    output = []
+    row_index = 0
+    column_index = 0
+    spiral = 0  #to use as bumper on right and up iterations
+    while steps > 0:
+        while column_index < column_stop:
+             output.append(inputMatrix[row_index][column_index])
+             column_index += 1
+             steps -= 1
+        column_index -= 1
+        column_stop -= 1
+        while row_index < row_stop -1:  # -1 because we must advance first
+            row_index += 1
+            output.append(inputMatrix[row_index][column_index])
+            steps -= 1
+        row_stop -= 1
+        while column_index > spiral:
+            column_index -= 1
+            output.append(inputMatrix[row_index][column_index])
+            steps-=1
+        spiral += 1
+        while row_index > spiral:
+            row_index-=1
+            output.append(inputMatrix[row_index][column_index])
+            steps-=1
+        column_index += 1
+    return output
 if __name__ == '__main__':
-  document = "Practice makes perfect. you'll only get Perfect by practice. just practice!"
-  print word_count_engine(document)
-  print word_counter_engine(document)
+    inputMatrix  = [ [1,    2,   3,  4,    5],
+                    [6,    7,   8,  9,   10],
+                    [11,  12,  13,  14,  15],
+                    [16,  17,  18,  19,  20] ]
+    for input_row in inputMatrix:
+        print input_row
+    print spiral_copy(inputMatrix)
+    matrix2 = [[i*j for i in range (1,11)] for j in range(1,11)]
+
+    for matrix_row in matrix2:
+        print matrix_row
+    print spiral_copy(matrix2)
+
+    document = "Practice makes perfect. you'll only get Perfect by practice. just practice!"
+    print word_count_engine(document)
+    print word_counter_engine(document)
