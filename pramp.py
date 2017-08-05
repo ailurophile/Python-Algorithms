@@ -68,23 +68,23 @@ def spiral_copy(inputMatrix):
     column_index = 0
     spiral = 0  #to use as bumper on right and up iterations
     while steps > 0:
-        while column_index < column_stop:
+        while column_index < column_stop and steps > 0:
              output.append(inputMatrix[row_index][column_index])
              column_index += 1
              steps -= 1
         column_index -= 1
         column_stop -= 1
-        while row_index < row_stop -1:  # -1 because we must advance first
+        while row_index < row_stop -1 and steps > 0:  # -1 because we must advance first
             row_index += 1
             output.append(inputMatrix[row_index][column_index])
             steps -= 1
         row_stop -= 1
-        while column_index > spiral:
+        while column_index > spiral and steps > 0:
             column_index -= 1
             output.append(inputMatrix[row_index][column_index])
             steps-=1
         spiral += 1
-        while row_index > spiral:
+        while row_index > spiral and steps > 0:
             row_index-=1
             output.append(inputMatrix[row_index][column_index])
             steps-=1
@@ -103,6 +103,16 @@ if __name__ == '__main__':
     for matrix_row in matrix2:
         print matrix_row
     print spiral_copy(matrix2)
+    matrix3 = [[1,2,3,4,5],[10,9,8,7,6]]
+    for matrix_row in matrix3:
+        print matrix_row
+    print spiral_copy(matrix3)
+    matrix4 = [[0,1,2],[9,10,3],[8,11,4],[7,6,5]]
+    for matrix_row in matrix4:
+        print matrix_row
+    print spiral_copy(matrix4)
+    matrix5 = [[1],[2],[3]]
+    print spiral_copy(matrix5)
 
     document = "Practice makes perfect. you'll only get Perfect by practice. just practice!"
     print word_count_engine(document)
