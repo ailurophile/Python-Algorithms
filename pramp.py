@@ -40,7 +40,7 @@ def counting_sort(tuples):
 
         output[counts[tuple[1]]] = tuple
         counts[tuple[1]] -= 1
-    return output[-1:1:-1]
+    return output[-1:0:-1]
 #    return output[1:]
 def word_counter_engine(document):
     """Document scanning function wordCountEngine using Counter object
@@ -90,6 +90,17 @@ def spiral_copy(inputMatrix):
             steps-=1
         column_index += 1
     return output
+def rotate(matrix, clockwise = True):
+    n = len(matrix[0])
+    m = len(matrix)
+    if clockwise == True:
+        rotated = [[matrix[row][col] for row in range(m-1,-1,-1)] for col in range(n)]
+    else:
+        rotated = [[matrix[row][col] for row in range(m)] for col in range(n-1,-1,-1)]
+
+
+
+    return rotated
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
                     [6,    7,   8,  9,   10],
@@ -113,6 +124,23 @@ if __name__ == '__main__':
     print spiral_copy(matrix4)
     matrix5 = [[1],[2],[3]]
     print spiral_copy(matrix5)
+    rotated = rotate(matrix2)
+    for each in matrix2:
+        print each
+    for each in rotated:
+        print each
+    rotated = rotate(matrix2, False)
+    for each in rotated:
+        print each
+    rotated = rotate(matrix4)
+    for each in matrix4:
+        print each
+    for each in rotated:
+        print each
+    rotated = rotate(matrix4,False)
+    for each in rotated:
+        print each
+
 
     document = "Practice makes perfect. you'll only get Perfect by practice. just practice!"
     print word_count_engine(document)
