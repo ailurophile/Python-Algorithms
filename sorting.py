@@ -35,6 +35,32 @@ def quicksort(L):
 
 def inline_quicksort(array):
     """Sorts array in place"""
+
+    if array == None or len(array) < 2:
+        return
+    quick_sort(array, 0, len(array) - 1)
+
+
+
+def quick_sort(array, start, end):
+    if array == None or len(array) < 2 or start > end:
+        return
+    front_index = start
+    back_index = end
+    pivot_value = array[back_index]
+    while front_index < back_index:
+        if array[front_index] > pivot_value:
+            #value larger than pivot_value so swap
+            array[back_index] = array[front_index]
+            back_index -= 1
+            array[front_index] = array[back_index]
+        else:
+            front_index += 1
+    array[front_index] = pivot_value
+    quick_sort(array,start,front_index-1)
+
+    quick_sort(array,front_index+1, end)
+    """
     if array == None or len(array) < 2:
         return array
     front_index = 0
@@ -50,7 +76,7 @@ def inline_quicksort(array):
             front_index += 1
 
     return quicksort(array[0:pivot_index]) + [pivot] + quicksort(array[pivot_index+1:])
-
+"""
 
 
 def fill(L,Sorted,i,begin,end):
@@ -165,3 +191,7 @@ if __name__ == '__main__':
     print "mergesort times"
     for each in msresults:
         print each[1]
+    a = [26, 8, 40, 73, 60, 94, 28, 30, 88, 30, 9, 85, 61, 20, 45, 69, 2, 46,
+    47, 60, 25, 31, 8, 5, 59, 54, 94, 86, 53, 20, 77, 65, 87, 14, 22]
+    inline_quicksort(a)
+    print(a)
