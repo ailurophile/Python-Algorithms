@@ -1,5 +1,6 @@
 import time
 import math
+import random
 def counting_sort(array, max_value):
     """run_time O(n) when max_val =~ len(array).  Array contents integers
     betwen 0 & max_value. Returns sorted array. Preserves order of equal values
@@ -19,7 +20,7 @@ def counting_sort(array, max_value):
     return output_array
 
 def quicksort(L):
-    """Recursive sort using len(L) additional space"""
+    """Recursive sort using additional space"""
     middle= len(L)/2
     if middle < 1 :
         return L
@@ -40,10 +41,8 @@ def inline_quicksort(array):
         return
     quick_sort(array, 0, len(array) - 1)
 
-
-
 def quick_sort(array, start, end):
-    if array == None or len(array) < 2 or start > end:
+    if len(array) < 2 or start > end:
         return
     front_index = start
     back_index = end
@@ -56,27 +55,36 @@ def quick_sort(array, start, end):
             array[front_index] = array[back_index]
         else:
             front_index += 1
-    array[front_index] = pivot_value
-    quick_sort(array,start,front_index-1)
+    array[front_index] = pivot_value  #insert pivot into array
+    quick_sort(array,start,front_index-1) #sort smaller values
+    quick_sort(array,front_index+1, end) #sort larger values
 
-    quick_sort(array,front_index+1, end)
-    """
+def qsort(array):
+    """ In-place quicksort using random pivot"""
     if array == None or len(array) < 2:
-        return array
-    front_index = 0
-    pivot_index = len(array) - 1
-#    back_index = pivot_index
-    pivot = array[pivot_index]
-    while front_index < pivot_index:
-        if array[front_index] > pivot:
-            array[pivot_index] = array[front_index]  #move larger element behind pivot
-            pivot_index -= 1
-            array[front_index]= array[pivot_index]  #move displace element to front
-        else:
-            front_index += 1
-
-    return quicksort(array[0:pivot_index]) + [pivot] + quicksort(array[pivot_index+1:])
-"""
+        return
+    q_sort(array,0,len(array)-1)
+def partition(array, left_index, right_index):
+    pivot = array[random.randint(left_index,right_index)]
+    while left_index < right_index:
+        while array[left_index] < pivot:
+            left_index += 1  #find value larger than pivot if any
+        while array[right_index] > pivot:
+            right_index -= 1 #find value smaller than pivot if any
+        if left_index >= right_index:
+            break
+        array[left_index],array[right_index] = array[right_index],array[left_index]
+        left_index += 1
+        right_index -= 1
+    if left_index == right_index:
+        left_index += 1
+    return left_index
+def q_sort(array, left, right):
+    index = partition(array, left, right)
+    if left < index - 1:
+        q_sort(array, left, index - 1)
+    if index < right:
+        q_sort(array, index, right)
 
 
 def fill(L,Sorted,i,begin,end):
@@ -143,7 +151,16 @@ if __name__ == '__main__':
 
     print "inline_quicksort test"
     test = [21, 4, 1, 3, 9, 20, 25, 6, 21, 14]
-    print inline_quicksort(test)
+    inline_quicksort(test)
+    print test
+    A = [4,6,5,8,3,2,1,7]
+    qsort(A)
+    print A
+    a = [26, 8, 40, 73, 60, 94, 28, 30, 88, 30, 9, 85, 61, 20, 45, 69, 2, 46,
+    47, 60, 25, 31, 8, 5, 59, 54, 94, 86, 53, 20, 77, 65, 87, 14, 22]
+#    inline_quicksort(a)
+    qsort(a)
+    print(a)
 
     A = [4,6,5,8,3,2,1,7]
     B = [1,2,3,4,5,6,7,8,9]
@@ -175,11 +192,10 @@ if __name__ == '__main__':
     print time_execution('quicksort(F)')
 
     test_cases = [[4,6,5,8,3,2,1,7],[1],[2,1,3],[2,1,2],list(range(1,101010)),list(range(1,100)+range(1,100))]
-    lengths = []
-    for i in range(0,len(test_cases)):
-        lengths.append(len(test_cases[i]))
+    lengths = [len(i) for i in test_cases]
     qsresults = []
     msresults = []
+
     for i in range(0,len(test_cases)):
         qsresults.append(time_execution('quicksort(test_cases[i])'))
         msresults.append(time_execution('mergesort(test_cases[i],0,lengths[i]-1)'))
@@ -191,7 +207,3 @@ if __name__ == '__main__':
     print "mergesort times"
     for each in msresults:
         print each[1]
-    a = [26, 8, 40, 73, 60, 94, 28, 30, 88, 30, 9, 85, 61, 20, 45, 69, 2, 46,
-    47, 60, 25, 31, 8, 5, 59, 54, 94, 86, 53, 20, 77, 65, 87, 14, 22]
-    inline_quicksort(a)
-    print(a)
