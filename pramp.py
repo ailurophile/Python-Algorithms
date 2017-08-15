@@ -116,6 +116,11 @@ Output integer count of paths
 
 
 def num_of_paths_to_dest(n):
+    """
+    returns number of paths for driverless car to reach upper right corner of nxn grid from
+    lower left not using memoization staying entirely within the lower half of the grid y<x
+    moving one position north or east at each step.
+    """
     if n < 1:
         return 0
     position = (0,0)
@@ -131,6 +136,30 @@ def step(position, end):
     x = position[0] + 1
     y = position[1] + 1
     return step((x,position[1]), end) + step((position[0],y),end)
+
+def number_of_paths_to_dest(n):
+    """
+    returns number of paths for driverless car to reach upper right corner of nxn grid from
+    lower left using memoization staying entirely within the lower half of the grid y<x
+    moving one position north or east at each step.
+    """
+    def num_paths(x,y,paths):
+        if x < 0 or y < 0:
+            return 0
+        if y > x:
+            paths[x][y] = 0
+            return 0
+        if paths[x][y] == -1:
+            paths[x][y] = num_paths(x-1,y,paths) + num_paths(x,y-1,paths)
+        return paths[x][y]
+    if n < 1:
+        return 0
+    memo = [[-1 for i in range(n+1) ] for j in range(n+1)]
+    memo[0][0] = 1  #base case
+    for j in range(n+1):
+        for i in range(j):
+            memo[i][j]=0
+    return num_paths(n,n,memo)
 
 
 if __name__ == '__main__':
@@ -178,4 +207,5 @@ if __name__ == '__main__':
     print word_count_engine(document)
     print word_counter_engine(document)
     for n in range(6):
-        print num_of_paths_to_dest(n)
+        print number_of_paths_to_dest(n)
+    print number_of_paths_to_dest(100)
