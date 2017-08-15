@@ -105,9 +105,9 @@ def rotate(matrix, clockwise = True):
 """
 You are testing a new driverless car that is located at the southwest corner of an
 nxn grid.  The car is supposed to get to the opposite corner without dipping into
-the bottom half of the grid.  Given n, the size of one axis of the grid, write a
-function that returns the number of possible paths the car can take.  In each step
-the car may move one position north or 1 position east.
+the top half of the grid so x>=y always.  Given n, the size of one axis of the grid,
+write a function that returns the number of possible paths the car can take.  In each
+step the car may move one position north or 1 position east.
 
 Input: n range [1,100]
 Output integer count of paths
@@ -116,19 +116,21 @@ Output integer count of paths
 
 
 def num_of_paths_to_dest(n):
-  position = (0,0)
-  return step(position, n-1)
+    if n < 1:
+        return 0
+    position = (0,0)
+    return step(position, n)
 
 def step(position, end):
-  if position[0] == end and position[1] == end:
-    return 1
-  if position[0] < position[1]:
-    return 0
-  if position[0] > end or position[1] > end:
-    return 0
-  x = position[0] + 1
-  y = position[1] + 1
-  return step((x,position[1]), end) + step((position[0],y),end)
+    if position[0] == end and position[1] == end:
+        return 1
+    if position[0] < position[1]:
+        return 0
+    if position[0] > end or position[1] > end:
+        return 0
+    x = position[0] + 1
+    y = position[1] + 1
+    return step((x,position[1]), end) + step((position[0],y),end)
 
 
 if __name__ == '__main__':
