@@ -101,6 +101,36 @@ def rotate(matrix, clockwise = True):
 
 
     return rotated
+
+"""
+You are testing a new driverless car that is located at the southwest corner of an
+nxn grid.  The car is supposed to get to the opposite corner without dipping into
+the bottom half of the grid.  Given n, the size of one axis of the grid, write a
+function that returns the number of possible paths the car can take.  In each step
+the car may move one position north or 1 position east.
+
+Input: n range [1,100]
+Output integer count of paths
+
+"""
+
+
+def num_of_paths_to_dest(n):
+  position = (0,0)
+  return step(position, n-1)
+
+def step(position, end):
+  if position[0] == end and position[1] == end:
+    return 1
+  if position[0] < position[1]:
+    return 0
+  if position[0] > end or position[1] > end:
+    return 0
+  x = position[0] + 1
+  y = position[1] + 1
+  return step((x,position[1]), end) + step((position[0],y),end)
+
+
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
                     [6,    7,   8,  9,   10],
@@ -145,3 +175,5 @@ if __name__ == '__main__':
     document = "Practice makes perfect. you'll only get Perfect by practice. just practice!"
     print word_count_engine(document)
     print word_counter_engine(document)
+    for n in range(6):
+        print num_of_paths_to_dest(n)
