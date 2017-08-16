@@ -161,6 +161,29 @@ def number_of_paths_to_dest(n):
             memo[i][j]=0
     return num_paths(n,n,memo)
 
+def deletion_distance(str1, str2):
+    """
+    Returns the minimum number of characters you need to delete from the two
+    input strings in order to get the same string.
+
+    """
+    memo = [[-1 for _ in range(len(str2)+1)] for _ in range(len(str1)+1)]
+
+    return deletion_helper(str1,str2,memo)
+    
+def deletion_helper(str1,str2,distances):
+    if str1 == "":
+        return len(str2)
+    if str2 == "":
+        return len(str1)
+
+    if distances[len(str1)][len(str2)] == -1:
+        if str1[-1] == str2[-1]:
+            distances[len(str1)][len(str2)] = deletion_helper(str1[:-1],str2[0:-1],distances)
+        else:
+            distances[len(str1)][len(str2)] = 1 + min(deletion_helper(str1,str2[:-1], distances),
+            deletion_helper(str1[:-1], str2,distances))
+    return distances[len(str1)][len(str2)]
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -209,3 +232,8 @@ if __name__ == '__main__':
     for n in range(6):
         print number_of_paths_to_dest(n)
     print number_of_paths_to_dest(100)
+    print deletion_distance("hit","heat")
+    print deletion_distance("","heat")
+    print deletion_distance("heharit","hearth")
+    print deletion_distance("%","heat")
+    print deletion_distance("","")
