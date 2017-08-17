@@ -170,7 +170,7 @@ def deletion_distance(str1, str2):
     memo = [[-1 for _ in range(len(str2)+1)] for _ in range(len(str1)+1)]
 
     return deletion_helper(str1,str2,memo)
-    
+
 def deletion_helper(str1,str2,distances):
     if str1 == "":
         return len(str2)
@@ -184,6 +184,37 @@ def deletion_helper(str1,str2,distances):
             distances[len(str1)][len(str2)] = 1 + min(deletion_helper(str1,str2[:-1], distances),
             deletion_helper(str1[:-1], str2,distances))
     return distances[len(str1)][len(str2)]
+"""
+Input: n: Positive integer, x: nonnegative number
+Output: nth root of input using no library functions
+"""
+def root(x, n):
+    def absolute_value(x):
+        if x < 0:
+            x = x*(-1)
+        return x
+    def power(x,n):
+        y = x
+        for _ in range(n-1):
+            y = y * x
+        return y
+    if x == 0:
+         return 0
+    max_guess = x
+    min_guess = 0.0
+    if x < 1:
+        max_guess = 1
+    current_guess = (min_guess + max_guess)/2.0
+    current_delta = x - power(current_guess,n)
+    while absolute_value(current_delta) >= .001:
+        if current_delta < 0:
+      # go smaller!!!!!
+            max_guess = current_guess
+        else:
+            min_guess = current_guess
+        current_guess = (min_guess + max_guess)/2
+        current_delta = x - power(current_guess,n)
+    return current_guess
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -237,3 +268,5 @@ if __name__ == '__main__':
     print deletion_distance("heharit","hearth")
     print deletion_distance("%","heat")
     print deletion_distance("","")
+    print root(7,3)
+    print root(9,2)
