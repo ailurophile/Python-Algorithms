@@ -270,3 +270,4 @@ if __name__ == '__main__':
     print deletion_distance("","")
     print root(7,3)
     print root(9,2)
+    print root(.25,2)
