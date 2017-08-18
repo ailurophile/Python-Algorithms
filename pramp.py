@@ -1,5 +1,24 @@
 from collections import defaultdict
 from collections import Counter
+from collections import deque
+
+def reverse_words(arr):
+    result = deque()
+    word = []
+    for char in arr:
+        if char != ' ':
+            word.append(char)
+        else:
+            result.appendleft(word)
+            word = []
+    #get final word which had no space delimiter
+    result.appendleft(word)
+    results = []
+    for each in result:
+        results.extend(each)
+        results.append(' ')
+    results.pop()  #no space needed at end
+    return results
 
 def word_count_engine(document):
     """Document scanning function wordCountEngine,
@@ -271,3 +290,10 @@ if __name__ == '__main__':
     print root(7,3)
     print root(9,2)
     print root(.25,2)
+    arr = [ 'p', 'e', 'r', 'f', 'e', 'c', 't', ' ',
+                'm', 'a', 'k', 'e', 's', ' ',
+                'p', 'r', 'a', 'c', 't', 'i', 'c', 'e' ]
+    print reverse_words(arr)
+    arr2 = ["a"," "," ","b"]
+    print reverse_words(arr2)
+    print reverse_words([" "," "])
