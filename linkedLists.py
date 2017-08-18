@@ -32,6 +32,7 @@ class LinkedList(object):
         if self.tail != None:
             self.tail.nextNode = node
         self.tail = node
+
     def kth_to_last(self,k):
         if k < 1:
             return None
@@ -51,6 +52,28 @@ class LinkedList(object):
             buffer.pop()
             current = current.nextNode
         return buffer.pop()
+
+    def partition(self,value):
+        """
+        partitions the linked list so that all values less than value 
+        appear before all values greater than or equal to it in the list.
+        """
+        current = self.head
+        end = self.tail
+        while current != end:
+            if current.data >= value:
+                self.tail.nextNode = SingleLinkNode(current.data)
+                self.tail = self.tail.nextNode
+                current.data = current.nextNode.data
+                current.nextNode = current.nextNode.nextNode
+            else:
+                current = current.nextNode
+        if current.data >= value:
+            self.tail.nextNode = SingleLinkNode(current.data)
+            self.tail = self.tail.nextNode
+            current.data = current.nextNode.data
+            current.nextNode = current.nextNode.nextNode
+
 class DoubleLinkedList(object):
     def __init__(self, head=None, tail = None):
         self.head = head
@@ -167,10 +190,12 @@ if __name__ == '__main__':
     remove_dups_no_buffering(lists[-1])
     print lists[-1]
     single_linked_list = LinkedList()
-    for i in [10,9,8,7,6,5,4,3,2,1]:
+    for i in [10,9,8,7,6,7,5,4,3,2,1]:
         single_linked_list.addData(i)
     print single_linked_list
     print single_linked_list.kth_to_last(3)
     print single_linked_list.kth_to_last(5)
     print single_linked_list.kth_to_last(0)
     print single_linked_list.kth_to_last(13)
+    single_linked_list.partition(7)
+    print single_linked_list
