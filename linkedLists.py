@@ -71,6 +71,17 @@ def remove_dups(l):
         else:
             current.previous.nextNode = current.nextNode
         current = current.nextNode
+def remove_dups_no_buffering(l):
+    if l.head == l.tail:
+        return
+    current = l.head
+    while current != None:
+        upstream = current.nextNode
+        while upstream != None:
+            if upstream.data == current.data:
+                upstream.previous.nextNode = upstream.nextNode
+            upstream = upstream.nextNode
+        current = current.nextNode
 def isPalindrome(head,tail):
     if head == tail:
         return True   #single element palindrome
@@ -107,5 +118,5 @@ if __name__ == '__main__':
     for l in lists:
         print l
         print isPalindrome(l.head,l.tail)
-    remove_dups(lists[-1])
+    remove_dups_no_buffering(lists[-1])
     print lists[-1]
