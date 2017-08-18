@@ -1,10 +1,56 @@
-
+from collections import deque
 class Node(object):
     def __init__(self, data, previous=None, nextNode=None):
         self.data = data
         self.previous = previous
         self.nextNode = nextNode
+class SingleLinkNode(object):
+    def __init__(self, data,  nextNode=None):
+        self.data = data
+        self.nextNode = nextNode
+class LinkedList(object):
+    def __init__(self, head=None, tail = None):
+        self.head = head
+        if tail == None:
+            self.tail = self.head
+        else:
+            self.tail = tail
+    def __str__(self):
+        out = []
+        if self.head == None: return''
+        ptr = self.head
+        while ptr.nextNode != None:
+            out.append(str(ptr.data)+'->')
+            ptr = ptr.nextNode
+        out.append(ptr.data)
+        return str(out)
 
+    def addData(self,data):
+        node = SingleLinkNode(data)
+        if self.head == None:
+            self.head = node
+        if self.tail != None:
+            self.tail.nextNode = node
+        self.tail = node
+    def kth_to_last(self,k):
+        if k < 1:
+            return None
+        buffer = deque()
+        current = self.head
+        for i in range(k):
+            buffer.appendleft(current.data)
+            if current.nextNode == None:
+                if i == k-1:
+                    return current.data
+                else:
+                    print "Linked list has fewer that k elements"
+                    return None
+            current = current.nextNode
+        while current != None:
+            buffer.appendleft(current.data)
+            buffer.pop()
+            current = current.nextNode
+        return buffer.pop()
 class DoubleLinkedList(object):
     def __init__(self, head=None, tail = None):
         self.head = head
@@ -120,3 +166,11 @@ if __name__ == '__main__':
         print isPalindrome(l.head,l.tail)
     remove_dups_no_buffering(lists[-1])
     print lists[-1]
+    single_linked_list = LinkedList()
+    for i in [10,9,8,7,6,5,4,3,2,1]:
+        single_linked_list.addData(i)
+    print single_linked_list
+    print single_linked_list.kth_to_last(3)
+    print single_linked_list.kth_to_last(5)
+    print single_linked_list.kth_to_last(0)
+    print single_linked_list.kth_to_last(13)
