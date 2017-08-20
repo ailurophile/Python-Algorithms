@@ -55,7 +55,7 @@ class LinkedList(object):
 
     def partition(self,value):
         """
-        partitions the linked list so that all values less than value 
+        partitions the linked list so that all values less than value
         appear before all values greater than or equal to it in the list.
         """
         current = self.head
@@ -73,6 +73,40 @@ class LinkedList(object):
             self.tail = self.tail.nextNode
             current.data = current.nextNode.data
             current.nextNode = current.nextNode.nextNode
+    def intersects(self,list2):
+        """
+        If list2 intersects this list, return the node of intersection else return
+        None.
+        """
+        if list2.head == None:
+            return None
+        length = 1
+        length2 = 1
+        current = self.head
+        while current.nextNode != None:
+            length += 1
+            current = current.nextNode
+        final_node = current
+        current = list2.head
+        while current.nextNode != None:
+            length2 += 1
+            current = current.nextNode
+        if current != final_node:
+            return None
+        #advance one pointer until remaining lists the same length
+        delta = length - length2
+        current1 = self.head
+        current2 = list2.head
+        if delta > 0:
+            for _ in range(delta):
+                current1 = current1.nextNode
+        else:
+            for  _ in range(-delta):
+                current2 = current2.nextNode
+        while current1 != current2:
+            current1 = current1.nextNode
+            current2 = current2.nextNode
+        return current1
 
 class DoubleLinkedList(object):
     def __init__(self, head=None, tail = None):
@@ -199,3 +233,25 @@ if __name__ == '__main__':
     print single_linked_list.kth_to_last(13)
     single_linked_list.partition(7)
     print single_linked_list
+    """
+    4-5-6-7-8-9-10
+    23-22-21-8-9-10
+    """
+    tail = SingleLinkNode(10)
+    node1 = SingleLinkNode(9,tail)
+    node2 = SingleLinkNode(8,node1)
+    node3 = SingleLinkNode(7,node2)
+    node4 = SingleLinkNode(6,node3)
+    node5 = SingleLinkNode(5,node4)
+    node6 = SingleLinkNode(4,node5)
+    node7 = SingleLinkNode(21,node2)
+    node8 = SingleLinkNode(22,node7)
+    node9 = SingleLinkNode(23,node8)
+    list1 = LinkedList(node6)
+    list2 = LinkedList(node9)
+    node = list1.intersects(list2)
+    print node
+    print node.data
+    node = list2.intersects(list1)
+    print node
+    print node.data
