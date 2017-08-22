@@ -234,6 +234,40 @@ def root(x, n):
         current_guess = (min_guess + max_guess)/2
         current_delta = x - power(current_guess,n)
     return current_guess
+"""
+Input: starting Node
+Output: integer minimum sales cost to dealer (leaf)
+The car manufacturer Honda holds their distribution system
+in the form of a tree (not necessarily binary). The root is
+the company itself, and every node in the tree represents a
+car distributor that receives cars from the parent node and
+ships them to its children nodes. The leaf nodes are car
+dealerships that sell cars direct to consumers. In addition,
+every node holds an integer that is the cost of shipping a
+car to it.Honda wishes to find the minimal Sales Path cost
+in its distribution tree. Given a node rootNode, write an
+function getCheapestCost that calculates the minimal Sales
+Path cost in the tree. Range(rootNode.cost) =  (0,100000)
+"""
+def get_cheapest_cost(rootNode):
+
+    if rootNode.children ==  []:
+       return rootNode.cost
+    cost = 1000000
+    for child in rootNode.children:
+       new_cost = get_cheapest_cost(child)
+       if new_cost < cost:
+                cost = new_cost
+    return cost + rootNode.cost
+
+class Node:
+
+  def __init__(self, cost):
+    self.cost = cost
+    self.children = []
+    self.parent = None
+
+
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -297,3 +331,21 @@ if __name__ == '__main__':
     arr2 = ["a"," "," ","b"]
     print reverse_words(arr2)
     print reverse_words([" "," "])
+    node1 = Node(0)
+    node2 = Node(5)
+    node3 = Node(3)
+    node4 = Node(4)
+    node1.children = [node2,node3]
+    node2.children = [node4]
+
+    print get_cheapest_cost(node1)
+    node5 = Node(2)
+    node6 = Node(0)
+    node7 = Node(1)
+    node8 = Node(10)
+    node9 = Node(1)
+    node3.children = [node5,node6]
+    node5.children = [node7]
+    node7.children = [node9]
+    node6.children = [node8]
+    print get_cheapest_cost(node1)
