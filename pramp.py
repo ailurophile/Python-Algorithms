@@ -250,7 +250,6 @@ function getCheapestCost that calculates the minimal Sales
 Path cost in the tree. Range(rootNode.cost) =  (0,100000)
 """
 def get_cheapest_cost(rootNode):
-
     if rootNode.children ==  []:
        return rootNode.cost
     cost = 1000000
@@ -266,8 +265,25 @@ class Node:
     self.cost = cost
     self.children = []
     self.parent = None
+"""
+Definition as above for get_cheapest_cost, alter the function in
+order to return the Sales Paths with the minimal cost in an array.
+"""
+def routes_helper(rootNode,routes):
+    if rootNode.children ==  []:
+        return rootNode.cost,[rootNode.cost]
+    cost = 1000000
+    for child in rootNode.children:
+       new_cost, new_routes = routes_helper(child, [child.cost] +routes )
+       print "cost: %s routes: %s" %(new_cost,new_routes)
+       if new_cost < cost:
+            cost = new_cost
+            results = [rootNode.cost] + new_routes
+            print "results = %s" %results
+    return cost + rootNode.cost, results
 
-
+def get_cheapest_route(rootNode):
+    return routes_helper(rootNode,[])
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -339,6 +355,8 @@ if __name__ == '__main__':
     node2.children = [node4]
 
     print get_cheapest_cost(node1)
+    print get_cheapest_route(node1)
+
     node5 = Node(2)
     node6 = Node(0)
     node7 = Node(1)
@@ -349,3 +367,4 @@ if __name__ == '__main__':
     node7.children = [node9]
     node6.children = [node8]
     print get_cheapest_cost(node1)
+    print get_cheapest_route(node1)
