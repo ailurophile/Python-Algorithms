@@ -267,23 +267,23 @@ class Node:
     self.parent = None
 """
 Definition as above for get_cheapest_cost, alter the function in
-order to return the Sales Paths with the minimal cost in an array.
+order to return all Sales Paths with the minimal cost in an array.
 """
 def routes_helper(rootNode,routes):
     if rootNode.children ==  []:
-        return rootNode.cost,[rootNode.cost]
+        return rootNode.cost,[[rootNode.cost]]
     cost = 1000000
     for child in rootNode.children:
-       new_cost, new_routes = routes_helper(child, [child.cost] +routes )
-       print "cost: %s routes: %s" %(new_cost,new_routes)
-       if new_cost < cost:
+        new_cost, new_routes = routes_helper(child, [[child.cost] +routes[0]])
+        if new_cost < cost:
             cost = new_cost
-            results = [rootNode.cost] + new_routes
-            print "results = %s" %results
+            results = [[rootNode.cost] + route for route in new_routes]
+        elif new_cost == cost:
+            results.extend([[rootNode.cost] + route for route in new_routes] )
     return cost + rootNode.cost, results
 
-def get_cheapest_route(rootNode):
-    return routes_helper(rootNode,[])
+def get_cheapest_routes(rootNode):
+    return routes_helper(rootNode,[[]])
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -355,7 +355,7 @@ if __name__ == '__main__':
     node2.children = [node4]
 
     print get_cheapest_cost(node1)
-    print get_cheapest_route(node1)
+    print get_cheapest_routes(node1)
 
     node5 = Node(2)
     node6 = Node(0)
@@ -367,4 +367,11 @@ if __name__ == '__main__':
     node7.children = [node9]
     node6.children = [node8]
     print get_cheapest_cost(node1)
-    print get_cheapest_route(node1)
+    print get_cheapest_routes(node1)
+    node10 = Node(6)
+    node11 = Node(1)
+    node12 = Node(5)
+    node1.children.append(node10)
+    node10.children = [node11,node12]
+    print get_cheapest_cost(node1)
+    print get_cheapest_routes(node1)
