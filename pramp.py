@@ -284,6 +284,80 @@ def routes_helper(rootNode,routes):
 
 def get_cheapest_routes(rootNode):
     return routes_helper(rootNode,[[]])
+def shortest_substring(input_string,characters):
+    """
+    Given an array of unique characters and a string, Implement a function that finds
+    the smallest substring of the string containing all the characters. Return
+    empty string if such a substring does not exist.
+
+
+    [time limit] 5000ms
+
+    Range of character array length = [1,30]
+    Range of input string length = [1,500]
+
+    """
+    character_counts = Counter(characters)
+    string_counts = Counter()
+    matches = 0
+    target_matches = len(characters)
+    start = 0
+    string_length = len(input_string)
+    if target_matches == 0 or string_length == 0:
+        return ""
+    for char in input_string:
+        if char in characters:
+            string_counts[char] += 1
+    for char in characters:
+        if char not in string_counts or character_counts[char] > string_counts[char]:
+            return ""  #No substring possible
+    extras = sum(string_counts.values()) - sum(character_counts.values())
+    string_counts.clear()
+    while input_string[start] not in character_counts:
+        start += 1  #advance to first occurence of a target character
+    #add character to Counter and increment match count
+    string_counts[input_string[start]] += 1
+    matches += 1
+    end =  start + 1
+    while matches < target_matches:
+        if input_string[end] in character_counts:
+            string_counts[input_string[end]] += 1
+            if string_counts[input_string[end]] <=  character_counts[input_string[end]]:
+                matches += 1
+            else:
+                 extras -= 1  #breaks zyx
+        end += 1
+    substring_length = end - start
+    substring_start = start
+    if substring_length == target_matches:
+        return input_string[start:end]
+
+    while end < string_length and extras > 0 :
+        if input_string[end] in character_counts:
+            string_counts[input_string[end]] += 1
+            if string_counts[input_string[end]] >  character_counts[input_string[end]]:
+                extras -= 1
+            end += 1
+        else:
+            end += 1
+            continue
+        #drop unnecessary characters off of front
+        while True:
+            while  input_string[start] not in character_counts:
+                start += 1
+            while string_counts[input_string[start]] > character_counts[input_string[start]]:
+                string_counts[input_string[start]] -= 1
+                start += 1
+            if input_string[start] in character_counts and string_counts[input_string[start]] <= string_counts[input_string[start]]:
+                break
+        if end - start < substring_length:
+            substring_length = end - start
+            substring_start = start
+    return input_string[substring_start:substring_start+substring_length]
+
+
+
+
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -375,3 +449,10 @@ if __name__ == '__main__':
     node10.children = [node11,node12]
     print get_cheapest_cost(node1)
     print get_cheapest_routes(node1)
+    print shortest_substring("I'm an ailurophile. I love cats",['c','a','t','s','a'])
+    print shortest_substring("I'm an ailurophile. I love cats",['a','a'])
+    print shortest_substring("I'm an ailurophile. I love cats",['d','a','t','s','a'])
+    print shortest_substring("ADOBECODEBANCDDD",['A','B','C'])
+    print shortest_substring("ADOBECODEBANCDDD",[])
+    print shortest_substring("xyyzyzyx",['x','y','z'])
+    print shortest_substring("",['A','B','C'])
