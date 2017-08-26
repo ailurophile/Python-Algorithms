@@ -57,9 +57,9 @@ def place_queens( queens_array, row, column, paths):
         if row == 7:
             paths.append(queens_array + [(row,column)])#valid placement of 8 found
             return
-#        #get placement for next row
+        #get placement for next row
         for col in range(8):
-            placement = place_queens(queens_array + [(row,column)], row + 1, col, paths)
+            place_queens(queens_array + [(row,column)], row + 1, col, paths)
 
 
 
