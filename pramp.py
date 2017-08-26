@@ -367,12 +367,7 @@ def array_of_array_products(arr):
     if len(arr) < 2:
         return product_array
     for i in range(len(arr)):
-#        multiplicands = []
         for each in arr[0:i]+arr[i+1:]:
-#        multiplicands.extend(arr[0:i])
-#        multiplicands.extend(arr[i+1:])
-#        for each in multiplicands:
-
             product = product*each
         product_array.append(product)
         product = 1
