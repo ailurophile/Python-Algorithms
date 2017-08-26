@@ -355,7 +355,28 @@ def shortest_substring(input_string,characters):
             substring_start = start
     return input_string[substring_start:substring_start+substring_length]
 
+def array_of_array_products(arr):
+    """
+    Input: array of integers, arr
+    Output:  array of products where products[i] contains the product of all integers in
+    the input array except arr[i]
 
+    """
+    product = 1
+    product_array = []
+    if len(arr) < 2:
+        return product_array
+    for i in range(len(arr)):
+#        multiplicands = []
+        for each in arr[0:i]+arr[i+1:]:
+#        multiplicands.extend(arr[0:i])
+#        multiplicands.extend(arr[i+1:])
+#        for each in multiplicands:
+
+            product = product*each
+        product_array.append(product)
+        product = 1
+    return product_array
 
 
 
@@ -456,3 +477,8 @@ if __name__ == '__main__':
     print shortest_substring("ADOBECODEBANCDDD",[])
     print shortest_substring("xyyzyzyx",['x','y','z'])
     print shortest_substring("",['A','B','C'])
+    arr = [8, 10, 2]
+    print array_of_array_products(arr)
+    arr = [0]
+    print array_of_array_products(arr)
+    print array_of_array_products([1,2,3,4,5])
