@@ -372,8 +372,64 @@ def array_of_array_products(arr):
         product_array.append(product)
         product = 1
     return product_array
+def find_duplicates(arr1, arr2):
+    """
+    Input: two arrays sorted in ascending order
+    Output: Array of items found in both input arrays in sorted order
 
+    """
+    len1 = len(arr1)
+    len2 = len(arr2)
+    if len1 > 10*len2 or len2 > 10*len1:
+        return disparate_find_duplicates(arr1,arr2)
+    index1 = 0
+    index2 = 0
+    results = []
+    while index1 < len1 and index2 < len2:
+        if arr1[index1] < arr2[index2]:
+            index1+= 1
+        elif arr1[index1] == arr2[index2]:
+          results.append(arr1[index1])
+          index1 += 1
+          index2 += 1
+        else:
+          index2 += 1
+    return results
+def disparate_find_duplicates(arr1, arr2):
+    """
+    Input: two arrays sorted in ascending order
+    Output: Array of items found in both input arrays in sorted order
+    To be used when one array is much longer than the other
 
+    """
+    def binary_search(value,array,start,end):
+        middle = (end + start)/2
+        if end - start < 2 :
+            return value == array[end-1] | value == array[start]
+        if value == array[middle]:
+            return True
+        if value > array[middle]:
+            return binary_search(value,array,middle+1,end)
+        else:
+            return binary_search(value,array,start,middle)
+
+    len1 = len(arr1)
+    len2 = len(arr2)
+    if len1 > len2:
+        short_length = len2
+        short_array = arr2
+        long_length = len1
+        long_array = arr1
+    else:
+        short_length = len1
+        short_array = arr1
+        long_length = len2
+        long_array = arr2
+    results = []
+    for each in short_array:
+        if binary_search(each,long_array,0,long_length):
+            results.append(each)
+    return results
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -477,3 +533,7 @@ if __name__ == '__main__':
     arr = [0]
     print array_of_array_products(arr)
     print array_of_array_products([1,2,3,4,5])
+    arr1 = [1,3,5,9]
+    arr2 = [2,3,4,6,9,10]
+    print(find_duplicates(arr1, arr2))
+    print(disparate_find_duplicates(arr1, arr2))
