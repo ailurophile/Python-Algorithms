@@ -31,11 +31,10 @@ def count_coins(value,coins,index, counts):
     coin = coins[index]
     if coin == 1:
         return 1  #only one way to make value using pennies
-    index += 1
+    index += 1  #advance to next coin
     count = 0
-    for i in range(value/coin):
+    for i in range(value/coin + 1):  #count ways with 0 - max possible of coin
         count += count_coins(value - i*coin, coins, index, counts)
-    count += count_coins(value%coin, coins, index, counts)
     counts[value] = count
     return count
 
@@ -53,13 +52,13 @@ def place_queens( queens_array, row, column, paths):
 
     if is_path_clear(queens_array, row, column):
     #place queen on grid
-
+        new_placement = queens_array + [(row,column)]
         if row == 7:
-            paths.append(queens_array + [(row,column)])#valid placement of 8 found
+            paths.append(new_placement)#valid placement of 8 found
             return
         #get placement for next row
         for col in range(8):
-            place_queens(queens_array + [(row,column)], row + 1, col, paths)
+            place_queens(new_placement, row + 1, col, paths)
 
 
 
