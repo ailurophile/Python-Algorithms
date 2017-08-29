@@ -2,6 +2,12 @@
 [1, 0, 3, 1, 2, 0, 5, 0] => [1, 1, 3, 5, 2, ?, ?, ?]
 """
 def removeZeros(arr):
+    """
+    Input: Array of numbers
+    Output: Input array with all non-zero values appearing before zero values
+    Constraint: Use minimum number of writes
+
+    """
 
     start_index = 0
     end_index = len(arr) - 1
@@ -28,10 +34,15 @@ a=1,b=2,z=26 etc
 20 = 1 (t)
 """
 def numberOfInterpretations(numberString):
+    """
+    Input: String of digits
+    Output: Integer indicating the number of ways the string of digits can be
+    interpreted using the mapping:  a=1, b=2, c=3,...,z = 26
+    """
     counts = [None for _ in numberString]
     return interpretation_count(numberString,counts)
 def interpretation_count(numberString,counts):
-    if  numberString == '0' or numberString == '':
+    if  numberString == "":
         return 0
     digit = int(numberString[0])
     if digit == 0:
