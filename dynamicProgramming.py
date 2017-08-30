@@ -70,6 +70,36 @@ def is_path_clear(array, row, column):
         if abs(spot[0] - row) == abs(spot[1] - column):
             return False
     return True
+def max_ones_submatrix(matrix):
+    """
+    Input: binary matrix
+    Output: Integer representing the largest submatrix containing all ones
+    """
+    number_of_rows = len(matrix)
+    if number_of_rows == 0:
+        return 0
+    number_of_columns = len(matrix[0])
+    if number_of_columns == 0:
+        return 0
+    max_size = 0
+
+    sums_matrix = [[0 for _ in range(number_of_columns)] for _ in range(number_of_rows)]
+    for i in range(number_of_columns):
+        if matrix[0][i] == 1:
+            sums_matrix[0][i] = 1
+            max_size = 1
+    for j in range(number_of_rows):
+        if matrix[j][0] == 1:
+            sums_matrix[j][0]= 1
+            max_size = 1
+    for row in range(1,number_of_rows):
+        for col in range(1,number_of_columns):
+            if matrix[row][col] == 1:
+                sum = 1 + min(sums_matrix[row-1][col],sums_matrix[row][col-1],sums_matrix[row-1][col-1])
+                if sum > max_size:
+                    max_size = sum
+                sums_matrix[row][col] = sum
+    return max_size
 
 
 
@@ -83,3 +113,23 @@ if __name__ == '__main__':
     print count_coins_to_value(1)
     print count_coins_to_value(5)
     print count_coins_to_value(32)
+    matrix = [
+    [1,1,1,1],
+    [1,0,1,1],
+    [1,1,1,1],
+    [1,0,1,1],
+    [0,1,1,1]]
+    print max_ones_submatrix(matrix)
+    matrix = [
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1],
+    [1,1,1,1]]
+    print max_ones_submatrix(matrix)
+    m = [[]]
+    print max_ones_submatrix(m)
+    m = [[1]]
+    print max_ones_submatrix(m)
+    m = [[0]]
+    print max_ones_submatrix(m)
