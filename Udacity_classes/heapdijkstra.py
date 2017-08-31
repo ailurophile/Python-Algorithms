@@ -8,9 +8,8 @@ def dijkstra(G,v):
     heap = []
     heapq.heappush(heap,dist_so_far[v])
     final_dist = {}
-    while len(final_dist) < len(G):
+    while len(heap) > 0:
         entry = heapq.heappop(heap)
-#        print "entry = ", entry
         node = entry[1]
         distance = entry[0]
         if node == "REMOVED": continue
@@ -27,10 +26,6 @@ def dijkstra(G,v):
                     dist_so_far[x] = [final_dist[node] + G[node][x], x]
                     heapq.heappush(heap,dist_so_far[x])
     return final_dist
-
-############
-# 
-# Test
 
 def make_link(G, node1, node2, w):
     if node1 not in G:
@@ -49,7 +44,7 @@ def make_link(G, node1, node2, w):
 def test():
     # shortcuts
     (a,b,c,d,e,f,g) = ('A', 'B', 'C', 'D', 'E', 'F', 'G')
-    triples = ((a,c,3),(c,b,10),(a,b,15),(d,b,9),(a,d,4),(d,f,7),(d,e,3), 
+    triples = ((a,c,3),(c,b,10),(a,b,15),(d,b,9),(a,d,4),(d,f,7),(d,e,3),
                (e,g,1),(e,f,5),(f,g,2),(b,f,1))
     G = {}
     for (i,j,k) in triples:
@@ -59,8 +54,4 @@ def test():
     assert dist[g] == 8 #(a -> d -> e -> g)
     assert dist[b] == 11 #(a -> d -> e -> g -> f -> b)
 
-test()   
-
-
-
-
+test()
