@@ -101,6 +101,42 @@ def max_ones_submatrix(matrix):
                 sums_matrix[row][col] = sum
     return max_size
 
+def longest_common_substring(s1,s2):
+    """
+    Input: 2 strings
+    Output: Integer representing the length of the longest substring of both input strings
+    """
+    max_substring = 0
+    # check for special cases
+    if s1 == "" or s2 == "":
+        return 0
+    l1 = len(s1)
+    l2 = len(s2)
+    if l1 == 1:
+        if s1[0] in s2:
+            return 1
+        return 0
+    if l2 == 1:
+        if s2[0] in s1:
+            return 1
+        return 0
+    # build table of zeroes one row and one column longer than lengths of s1 & s2
+    counts_table = [[0 for _ in range(l1 + 1)] for _ in range(l2 + 1)]
+    for i in range(1,l2+1):  #rows based on length of s2
+        for j in range(1,l1+1):  # columns based on length of s1
+            if s1[j-1] == s2[i-1]:  #indices for table off by 1 because extra zero row & column
+                new_length = 1 + counts_table[i-1][j-1]
+                counts_table[i][j] = new_length  #extend length of substring (on diagonal)
+                if new_length > max_substring:  #if longest yet, save it
+                    max_substring = new_length
+    return max_substring
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -133,3 +169,19 @@ if __name__ == '__main__':
     print max_ones_submatrix(m)
     m = [[0]]
     print max_ones_submatrix(m)
+    print "testing substrings"
+    s2 = "i"
+    s1 = "isnt"
+    print longest_common_substring(s1,s2)
+    s2 = ""
+    print longest_common_substring(s1,s2)
+    s2 = "wasnt"
+    print longest_common_substring(s1,s2)
+    s2 = "isasasntt"
+    print longest_common_substring(s1,s2)
+    s2 = "asasnt"
+    print longest_common_substring(s1,s2)
+    s1 = "tissuesasa"
+    print longest_common_substring(s1,s2)
+    s2 = "su"
+    print longest_common_substring(s1,s2)
