@@ -430,6 +430,26 @@ def disparate_find_duplicates(arr1, arr2):
         if binary_search(each,long_array,0,long_length):
             results.append(each)
     return results
+def find_pairs_with_given_difference(arr, k):
+  """
+  input: array of integers, target difference
+  output: array of ordered pairs where the x and y values are both in the input array
+  and where x - y = k
+
+  """
+  if k < 0 or arr == []:
+    return []
+  output = []
+  hash = {}
+  for value in arr:
+    if value not in hash:
+      hash[value] = 1
+  for value in arr:
+    diff = value - k
+    if diff in hash:
+      output.append((value,diff))
+  return output
+
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -537,3 +557,6 @@ if __name__ == '__main__':
     arr2 = [2,3,4,6,9,10]
     print(find_duplicates(arr1, arr2))
     print(disparate_find_duplicates(arr1, arr2))
+    print find_pairs_with_given_difference([0, -1, -2, 2, 1],1)
+    print find_pairs_with_given_difference([0, -1, -2, 2, 1],2)
+    print find_pairs_with_given_difference([1, 7, 5, 3, 32, 17, 12],17)
