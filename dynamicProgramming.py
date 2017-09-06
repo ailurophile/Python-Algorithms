@@ -165,8 +165,8 @@ def max_rod_value(rod_length,prices):
     """
     if rod_length < 1 or prices == []:
         return 0
-    values = [0 for _ in range(rod_length + 1)]
     pieces = len(prices)
+    values = [0 for _ in range(max(rod_length,pieces) + 1)]
     # copy prices into values array
     for i in range(pieces):
         values[i+1] = prices[i]
@@ -241,8 +241,14 @@ if __name__ == '__main__':
     prices = [1,5,8,9,10,17,17,20]
     print max_rod_price(8,prices)
     print max_rod_value(8,prices)
-    print time_execution('max_rod_price(80,prices)')
-    print time_execution('max_rod_value(80,prices)')
+#    print time_execution('max_rod_price(80,prices)')
+#    print time_execution('max_rod_value(80,prices)')
     prices = [3,5,8,9,10,17,17,20]
+    print max_rod_price(9,prices)
+    print max_rod_value(9,prices)
+    prices = [1,5,5,5,6,7,17,20]
+    print max_rod_price(6,prices)
+    print max_rod_value(6,prices)
+    prices = [0,6,1,2,6,7,7,8]
     print max_rod_price(9,prices)
     print max_rod_value(9,prices)
