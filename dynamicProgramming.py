@@ -1,3 +1,13 @@
+import time
+import math
+import random
+
+def time_execution(code):
+   start = time.clock()  # start the clock
+   result = eval(code)  # evaluate any string as if it is a Python command
+   run_time = time.clock() - start  # find difference in start and end time
+   return result, run_time  # return the result of the code and time taken
+
 def number_of_paths(n):
     """Returns the number of paths to the top of a flight of n stairs taking
     1, 2 or 3 stairs at each step"""
@@ -130,6 +140,47 @@ def longest_common_substring(s1,s2):
                 if new_length > max_substring:  #if longest yet, save it
                     max_substring = new_length
     return max_substring
+def max_rod_price(rod_length,prices):
+    """
+    Inputs: integer rod length, array of prices per unit where unit = index
+    Output: maximum value obtainable from rod
+    Naive top down recursive approach
+    """
+    if rod_length < 1 or prices == []:
+        return 0
+    longest = len(prices)
+    pieces = rod_length/longest
+    max_price = 0
+    for i in range(pieces + 1):
+        price =i* prices[longest-1] + max_rod_price(rod_length - i*longest, prices[:-1])
+        if price > max_price:
+            max_price = price
+    return max_price
+
+def max_rod_value(rod_length,prices):
+    """
+    Inputs: integer rod length, array of prices per unit where unit = index
+    Output: maximum value obtainable from rod
+    Bottom up dynamic programming approach
+    """
+    if rod_length < 1 or prices == []:
+        return 0
+    values = [0 for _ in range(rod_length + 1)]
+    pieces = len(prices)
+    # copy prices into values array
+    for i in range(pieces):
+        values[i+1] = prices[i]
+    #find best price for each progressively longer piece using previously saved values
+    for i in range(1,rod_length+1):
+        max_value = values[i]
+        for j in range((i+1)/2):
+            value = values[j+1] + values[i-1-j]
+            if value > max_value:
+                max_value = value
+        values[i] = max_value
+    return values[rod_length]
+
+
 
 
 
@@ -140,6 +191,7 @@ def longest_common_substring(s1,s2):
 
 
 if __name__ == '__main__':
+    """
     placements = queen_placements()
     print "placement count = %d" % len(placements)
     print placements
@@ -185,3 +237,12 @@ if __name__ == '__main__':
     print longest_common_substring(s1,s2)
     s2 = "su"
     print longest_common_substring(s1,s2)
+    """
+    prices = [1,5,8,9,10,17,17,20]
+    print max_rod_price(8,prices)
+    print max_rod_value(8,prices)
+    print time_execution('max_rod_price(80,prices)')
+    print time_execution('max_rod_value(80,prices)')
+    prices = [3,5,8,9,10,17,17,20]
+    print max_rod_price(9,prices)
+    print max_rod_value(9,prices)
