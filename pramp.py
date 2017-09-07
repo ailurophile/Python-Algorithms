@@ -1,6 +1,7 @@
 from collections import defaultdict
 from collections import Counter
 from collections import deque
+import math
 
 def reverse_words(arr):
     result = deque()
@@ -451,6 +452,34 @@ def find_pairs_with_given_difference(arr, k):
             output.append((value,diff))
   return output
 
+def index_equals_value_search(arr):
+    """
+    Input: array of integers
+    Output: integer representing the first value which matches
+    its index in the array, -1 if not found
+    """
+    length = len(arr)
+    front = 0
+    back = length-1
+    index = int(length/2)
+    matches = -1
+    while back >= front:
+        if arr[index] == index:
+            matches=index
+        if arr[index] >= index:
+            back = index
+            index = (index + front)/2
+            if index == back:
+                break
+        else:
+            front = index
+            index = (back + index )/2
+            if index == front:
+                #check last element of arr
+                if arr[back] == back:
+                    matches=back
+                break
+    return matches
 
 if __name__ == '__main__':
     inputMatrix  = [ [1,    2,   3,  4,    5],
@@ -563,3 +592,13 @@ if __name__ == '__main__':
     print find_pairs_with_given_difference([0, -1, 2, 2, 1],0)
     print find_pairs_with_given_difference([0, -1, -2, 2, 1],2)
     print find_pairs_with_given_difference([1, 7, 5, 3, 32, 17, 12],17)
+    arr = [1,2,2,3,4]
+    print index_equals_value_search(arr)
+    arr = [0]
+    print index_equals_value_search(arr)
+    arr = [-6,-5,-4,-1,1,3,5,7]
+    print index_equals_value_search(arr)
+    arr = [0,1,2,3,4]
+    print index_equals_value_search(arr)
+    arr = []
+    print index_equals_value_search(arr)
