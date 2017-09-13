@@ -84,6 +84,52 @@ def median_of_sorted_arrays(nums1,nums2):
     else:
         return (median + previous)/2.0
 
+def max_palindromic_substring(input_string):
+    """
+    Input: string
+    Output: string representing the longest palindromic substring of the input string
+    """
+    length = len(input_string)
+    if length < 2:
+        return input_string
+    palindrome_length = 1
+    index= (0,0)
+    grid = [[0 for _ in range(length + 1)] for _ in range(length + 1)]
+    backwards_string = input_string[::-1]
+    for i in range(1,length + 1):
+        for j in range(1,length + 1):
+            if input_string[j-1] == backwards_string[i-1]:
+                run_length = 1 + grid[i-1][j-1]
+                grid[i][j] = run_length
+                if run_length > palindrome_length:  #track longest
+                    palindrome_length = run_length
+                    index = (i ,j)
+            else:
+                grid[i][j] = 0
+    i = index[0]
+    j = index[1]
+    if index == (0,0):
+        return input_string[0]
+    if i == j and i != length: #reversed letters separated by 2 or more
+        #zero out main diagonal
+        for k in range(1,length):
+            grid[k][k] = 0
+        #find largest number in grid
+        palindrome_length = 1
+        index = (0,0)
+        for i in range(1,length + 1):
+            for j in range(1,length + 1):
+                if grid[i][j] > palindrome_length:
+                    palindrome_length = grid[i][j]
+                    index = (i,j)
+    #walk back to start of palindrome
+    i = index[0]
+    j = index[1]
+    while grid[i][j] > 0:
+        i -= 1
+        j -= 1
+    return input_string[j:j+palindrome_length]
+
 if __name__ == '__main__':
     assert length_of_longest_substring("abcabcbb") == 3
     assert length_of_longest_substring("abcdef") == 6
@@ -107,5 +153,15 @@ if __name__ == '__main__':
     nums1 = [1]
     nums2 = [2,3]
     assert  median_of_sorted_arrays(nums1,nums2) == 2.0
-
+    assert max_palindromic_substring("pal") == "p"
+    assert max_palindromic_substring("pallap") == "pallap"
+    assert max_palindromic_substring("vvbpap") == "pap"
+    temp = max_palindromic_substring("papa")
+    assert temp == "apa" or temp == "pap"
+    assert max_palindromic_substring("palap") == "palap"
+    assert max_palindromic_substring("vbpap") == "pap"
+    assert max_palindromic_substring("ppl") == "pp"
+    assert max_palindromic_substring("") == ""
+    temp = max_palindromic_substring("babad")
+    assert temp == "aba" or temp == "bab"
     print "all tests passed"
