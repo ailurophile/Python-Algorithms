@@ -118,6 +118,33 @@ def max_palindromic_substring(input_string):
         i -= 1
         j -= 1
     return input_string[j:j+palindrome_length]
+
+def zig_zag_conversion(input_string,number_of_rows):
+    """
+    input_string: strings
+    number_of_rows: integer
+    output: string reordered in zig-zag pattern using given number of rows
+    """
+    length = len(input_string)
+    if number_of_rows < 1:
+        return ""
+    if length < number_of_rows or number_of_rows < 2:
+        return input_string
+    lists = [[] for _ in range(number_of_rows)]
+    count = 0
+    delta = 1
+    index = 0
+    while count < length:
+        lists[index].append(input_string[count])
+        count += 1
+        index += delta
+        if index == 0 or index == number_of_rows-1:  #time to reverse direction
+            delta = delta * (-1)
+    zig = lists[0]
+    for i in range(1,number_of_rows):
+        zig.extend(lists[i])
+    return "".join(zig)
+
 def is_palindrome(s):
     if len(s) < 2:
         return True
@@ -162,6 +189,15 @@ if __name__ == '__main__':
     assert temp == "aba" or temp == "bab"
     assert max_palindromic_substring("cbbd") == "bb"
     print max_palindromic_substring("abcdecba")
+    assert zig_zag_conversion("PAYPALISHIRING",3) ==  "PAHNAPLSIIGYIR"
+    assert zig_zag_conversion("",3) == ""
+    assert zig_zag_conversion("HELLOWORLD",0) == ""
+    assert zig_zag_conversion("HELLOWORLD",1) == "HELLOWORLD"
+    assert zig_zag_conversion("ABCD",2) == "ACBD"
+    assert zig_zag_conversion("HELP",3) == "HEPL"
+    assert zig_zag_conversion("HELLOWORLD",4) == "HOEWRLOLLD"
+
+
 
 
     print "all tests passed"
