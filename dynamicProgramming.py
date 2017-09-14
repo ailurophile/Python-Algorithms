@@ -179,6 +179,33 @@ def max_rod_value(rod_length,prices):
                 max_value = value
         values[i] = max_value
     return values[rod_length]
+def max_palindromic_substring(input_string):
+    """
+    Input: string
+    Output: string representing longest palindromic substring of input string
+    """
+    length = len(input_string)
+    grid = [[False for _ in range(length)] for _ in range(length)]
+    longest = 1
+    index = (0,0)
+    #base case palindromes
+    for i in range(length):
+        grid[i][i] = True
+        if (i < length-1) and (input_string[i] == input_string[i+1]):
+            grid[i][i+1] = True
+            longest = 2
+            index = (i,i+1)
+    for i in range(length - 1,-1,-1):
+        for j in range(i+2,length):
+            if grid[i][j]  == False:  #don't overwrite base case pairs
+                is_palindrome = grid[i+1][j-1] & (input_string[i] == input_string[j])
+                if is_palindrome:
+                    palindrome_length = j - i + 1
+                    grid[i][j] = True
+                    if palindrome_length > longest:
+                        longest = palindrome_length
+                        index = (i,j)
+    return input_string[index[0]:index[1]+1]
 
 
 
@@ -252,3 +279,23 @@ if __name__ == '__main__':
     prices = [0,6,1,2,6,7,7,8]
     print max_rod_price(9,prices)
     print max_rod_value(9,prices)
+    assert max_palindromic_substring("abac") == "aba"
+    assert max_palindromic_substring("pal") == "p"
+    assert max_palindromic_substring("pallap") == "pallap"
+    assert max_palindromic_substring("vvbpap") == "pap"
+    temp = max_palindromic_substring("papa")
+    assert temp == "apa" or temp == "pap"
+    assert max_palindromic_substring("palap") == "palap"
+    assert max_palindromic_substring("vbpap") == "pap"
+    assert max_palindromic_substring("ppl") == "pp"
+    assert max_palindromic_substring("") == ""
+    assert max_palindromic_substring("a") == "a"
+    assert max_palindromic_substring("aa") == "aa"
+    assert max_palindromic_substring("aaa") == "aaa"
+    assert max_palindromic_substring("aaaa") == "aaaa"
+    assert max_palindromic_substring("aabaa") == "aabaa"
+    assert max_palindromic_substring("baabbaa") == "aabbaa"
+    temp = max_palindromic_substring("babad")
+    assert temp == "aba" or temp == "bab"
+    assert max_palindromic_substring("cbbd") == "bb"
+    assert max_palindromic_substring("abcdecba") == "a"
