@@ -102,7 +102,8 @@ def max_palindromic_substring(input_string):
 
                 run_length = 1 + grid[i-1][j-1]
                 grid[i][j] = run_length
-                if run_length > palindrome_length:  #track longest
+                #if actual palindrome & longest yet, store it
+                if (run_length > palindrome_length) & ((length-j)==(i-run_length)):  #track longest
                     palindrome_length = run_length
                     index = (i ,j)
             else:
@@ -112,32 +113,6 @@ def max_palindromic_substring(input_string):
     j = index[1]
     if index == (0,0):
         return input_string[0]
-    #check for reversed letters separated by 2 or more (invalid plaindrome)
-    if (length - j) != (i - palindrome_length):
-        #zero out false plaindrome
-        while grid[i][j] > 0:
-            grid[i][j] = 0
-            i -= 1
-            j -= 1
-        #find other possible candidates
-        candidates = [[] for _ in range(palindrome_length)]
-
-
-        for i in range(1,length + 1):
-            for j in range(1,length + 1):
-                possible_length = grid[i][j]
-                if  possible_length > 1:
-                    candidates[possible_length - 1].append((i,j))
-        for k in range(palindrome_length,1,-1):
-            for i,j in candidates[k-1]:
-                if (length - j) == (i - k):
-                    while grid[i][j] > 0:
-                        i -= 1
-                        j -= 1
-                    return input_string[j:j+k]
-        #no palindromes of length 2 or greater so return first characters
-        return input_string[0]
-
     #walk back to start of palindrome
     while grid[i][j] > 0:
         i -= 1
