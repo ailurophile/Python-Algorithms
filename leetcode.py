@@ -99,6 +99,7 @@ def max_palindromic_substring(input_string):
     for i in range(1,length + 1):
         for j in range(1,length + 1):
             if input_string[j-1] == backwards_string[i-1]:
+
                 run_length = 1 + grid[i-1][j-1]
                 grid[i][j] = run_length
                 if run_length > palindrome_length:  #track longest
@@ -106,30 +107,48 @@ def max_palindromic_substring(input_string):
                     index = (i ,j)
             else:
                 grid[i][j] = 0
+
     i = index[0]
     j = index[1]
     if index == (0,0):
         return input_string[0]
-    if i == j and i != length: #reversed letters separated by 2 or more
-        #zero out main diagonal
-        for k in range(1,length):
-            grid[k][k] = 0
-        #find largest number in grid
-        palindrome_length = 1
-        index = (0,0)
+    #check for reversed letters separated by 2 or more (invalid plaindrome)
+    if (length - j) != (i - palindrome_length):
+        #zero out false plaindrome
+        while grid[i][j] > 0:
+            grid[i][j] = 0
+            i -= 1
+            j -= 1
+        #find other possible candidates
+        candidates = [[] for _ in range(palindrome_length)]
+
+
         for i in range(1,length + 1):
             for j in range(1,length + 1):
-                if grid[i][j] > palindrome_length:
-                    palindrome_length = grid[i][j]
-                    index = (i,j)
+                possible_length = grid[i][j]
+                if  possible_length > 1:
+                    candidates[possible_length - 1].append((i,j))
+        for k in range(palindrome_length,1,-1):
+            for i,j in candidates[k-1]:
+                if (length - j) == (i - k):
+                    while grid[i][j] > 0:
+                        i -= 1
+                        j -= 1
+                    return input_string[j:j+k]
+        #no palindromes of length 2 or greater so return first characters
+        return input_string[0]
+
     #walk back to start of palindrome
-    i = index[0]
-    j = index[1]
     while grid[i][j] > 0:
         i -= 1
         j -= 1
     return input_string[j:j+palindrome_length]
-
+def is_palindrome(s):
+    if len(s) < 2:
+        return True
+    if s[0] != s[-1]:
+        return False
+    return is_palindrome(s[1:-1])
 if __name__ == '__main__':
     assert length_of_longest_substring("abcabcbb") == 3
     assert length_of_longest_substring("abcdef") == 6
@@ -153,6 +172,7 @@ if __name__ == '__main__':
     nums1 = [1]
     nums2 = [2,3]
     assert  median_of_sorted_arrays(nums1,nums2) == 2.0
+
     assert max_palindromic_substring("pal") == "p"
     assert max_palindromic_substring("pallap") == "pallap"
     assert max_palindromic_substring("vvbpap") == "pap"
@@ -162,6 +182,11 @@ if __name__ == '__main__':
     assert max_palindromic_substring("vbpap") == "pap"
     assert max_palindromic_substring("ppl") == "pp"
     assert max_palindromic_substring("") == ""
+
     temp = max_palindromic_substring("babad")
     assert temp == "aba" or temp == "bab"
+    assert max_palindromic_substring("cbbd") == "bb"
+    print max_palindromic_substring("abcdecba")
+
+
     print "all tests passed"
