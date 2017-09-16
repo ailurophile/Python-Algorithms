@@ -180,7 +180,30 @@ def max_rod_value(rod_length,prices):
         values[i] = max_value
     return values[rod_length]
 
+def subset_sum(input_set, target_sum):
+    def helper(adends,target_sum):
+        if target_sum < 0 or len(addends) == 0:
+            return False
+        if target_sum == 0 or target_sum in addends:
+            return True
+        for each in addends:
+            possible = helper( addends.difference({each}), target_sum - each)
+            if possible:
+                return True
+        return False
 
+
+    if target_sum <0:
+        return False
+    addends = set()
+    for addend in input_set:
+        if addend == target_sum:
+            return True
+        if addend < target_sum:
+            addends.add(addend)
+    if len(addends) == 0:
+        return False
+    return helper(input_set,target_sum)
 
 
 
@@ -252,3 +275,8 @@ if __name__ == '__main__':
     prices = [0,6,1,2,6,7,7,8]
     print max_rod_price(9,prices)
     print max_rod_value(9,prices)
+    assert subset_sum({1,2,3,4,5,8},6) == True
+    assert subset_sum({1,2,3,4,5,8},8) == True
+    assert subset_sum({1,2,3,4,5,8},0) == False
+    assert subset_sum({},6) == False
+    print "subset sum tests passed"
