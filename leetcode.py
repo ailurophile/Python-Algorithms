@@ -144,6 +144,21 @@ def zig_zag_conversion(input_string,number_of_rows):
     for i in range(1,number_of_rows):
         zig.extend(lists[i])
     return "".join(zig)
+def is_palindrome_number(number):
+    if number <0:
+        return False
+    n = 0
+    while number/pow(10,n) > 0:
+        n += 1
+    n -= 1 #greatest power of ten in number
+    while n > 0:
+        most_significant_digit = number/pow(10,n)
+        least_significant_digit = number%10
+        if most_significant_digit != least_significant_digit:
+            return False
+        number = (number%pow(10,n))/10
+        n -=2
+    return True
 
 def is_palindrome(s):
     if len(s) < 2:
@@ -196,6 +211,16 @@ if __name__ == '__main__':
     assert zig_zag_conversion("ABCD",2) == "ACBD"
     assert zig_zag_conversion("HELP",3) == "HEPL"
     assert zig_zag_conversion("HELLOWORLD",4) == "HOEWRLOLLD"
+    assert is_palindrome_number(0) == True
+    assert is_palindrome_number(101) == True
+    assert is_palindrome_number(1001) == True
+    assert is_palindrome_number(-10) == False
+    assert is_palindrome_number(10) == False
+    assert is_palindrome_number(5) == True
+    assert is_palindrome_number(55) == True
+    assert is_palindrome_number(565) == True
+    assert is_palindrome_number(5665) == True
+    assert is_palindrome_number(123) == False
 
 
 
