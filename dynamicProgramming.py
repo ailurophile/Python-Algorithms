@@ -31,20 +31,36 @@ def count_coins_to_value(value):
     if value < 1:
         return 0
     coins = [25,10,5,1]
-    counts = [0 for _ in range(value + 1)]  #for memoization
+    counts = [[0 for _ in range(value + 1)] for _ in range(len(coins))]  #for memoization
     count_coins(value,coins, counts)
-    return counts[value]
+    return counts[3][value]
 
 def count_coins(value,coins, counts):
-    if counts[value] != 0:
-        return counts[value]
+    coin_index = len(coins) - 1
+    if value == 0:
+        return 1
+    if counts[coin_index][value] != 0:
+        return counts[coin_index][value]
     coin = coins[0]
     if coin == 1:
         return 1  #only one way to make value using pennies
     count = 0
     for i in range(value/coin + 1):  #count ways with 0 - max possible of coin
         count += count_coins(value - i*coin, coins[1:], counts)
-    counts[value] = count
+    counts[coin_index][value] = count
+    return count
+def count_coins_no_memo(value):
+    coins = [25,10,5,1]
+    return count_coins_no_memo_helper(value,coins)
+def count_coins_no_memo_helper(value, coins):
+    if value == 0:
+        return 1
+    coin = coins[0]
+    if coin == 1:
+        return 1  #only one way to make value using pennies
+    count = 0
+    for i in range(value/coin + 1):  #count ways with 0 - max possible of coin
+        count += count_coins_no_memo_helper(value - i*coin, coins[1:])
     return count
 
 def queen_placements():
@@ -241,16 +257,26 @@ def subset_sum(input_set, target_sum):
 
 
 if __name__ == '__main__':
-    """
+
     placements = queen_placements()
     print "placement count = %d" % len(placements)
     print placements
     print("testing coins")
+    print count_coins_no_memo(12)
+    print count_coins_no_memo(10)
+    print count_coins_no_memo(1)
+    print count_coins_no_memo(5)
+    print count_coins_no_memo(32)
+    print count_coins_no_memo(50)
+    print count_coins_no_memo(100)
     print count_coins_to_value(12)
     print count_coins_to_value(10)
     print count_coins_to_value(1)
     print count_coins_to_value(5)
     print count_coins_to_value(32)
+    print count_coins_to_value(50)
+    print count_coins_to_value(100)
+    """
     matrix = [
     [1,1,1,1],
     [1,0,1,1],
