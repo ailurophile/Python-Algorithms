@@ -166,6 +166,41 @@ def is_palindrome(s):
     if s[0] != s[-1]:
         return False
     return is_palindrome(s[1:-1])
+
+def max_volume(heights):
+    """
+    Input: array of numbers
+    Output: maximum volume of water container can hold using numbers in array
+    as heights and positions as distances apart assuming a depth of 1 unit.
+    """
+    def volume(index1,index2):
+        tall = max(heights[index1],heights[index2])
+        short = min(heights[index1],heights[index2])
+        return (index2 - index1)*short
+    front = 0
+    back = len(heights) - 1
+    current_volume = volume(front,back)
+    front_height = heights[front]
+    back_height = heights[back]
+    while front < back:
+        if front_height>back_height:
+            #try to make back taller
+            back -= 1
+            if (heights[back] > back_height):
+                vol = volume(front,back)
+                if vol > current_volume:
+                    current_volume = vol
+                back_height = heights[back]
+        else:
+            #try to make front taller
+            front += 1
+            if (heights[front] > front_height):
+                vol = volume(front,back)
+                if vol > current_volume:
+                    current_volume = vol
+                front_height = heights[front]
+    return current_volume
+
 if __name__ == '__main__':
     assert length_of_longest_substring("abcabcbb") == 3
     assert length_of_longest_substring("abcdef") == 6
@@ -203,7 +238,7 @@ if __name__ == '__main__':
     temp = max_palindromic_substring("babad")
     assert temp == "aba" or temp == "bab"
     assert max_palindromic_substring("cbbd") == "bb"
-    print max_palindromic_substring("abcdecba")
+    assert max_palindromic_substring("abcdecba") == "a"
     assert zig_zag_conversion("PAYPALISHIRING",3) ==  "PAHNAPLSIIGYIR"
     assert zig_zag_conversion("",3) == ""
     assert zig_zag_conversion("HELLOWORLD",0) == ""
@@ -221,8 +256,13 @@ if __name__ == '__main__':
     assert is_palindrome_number(565) == True
     assert is_palindrome_number(5665) == True
     assert is_palindrome_number(123) == False
-
-
-
+    assert max_volume([1,2,1,4]) == 4
+    assert max_volume([1,4,1,2]) == 4
+    assert max_volume([1,4,1,4]) == 8
+    assert max_volume([1,2,1,5,1,1,1,1,3]) == 15
+    assert max_volume([1,2,1,5,1,1,1,4,3]) == 16
+    assert max_volume([0,2]) == 0
+    assert max_volume([1,2,4,3]) == 4
+    assert max_volume([2,3,4,5,18,17,6]) == 17
 
     print "all tests passed"
