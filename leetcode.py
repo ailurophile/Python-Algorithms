@@ -201,6 +201,44 @@ def max_volume(heights):
                 front_height = heights[front]
     return current_volume
 
+def integer_to_roman(target):
+    """
+    Input: integer
+    Output: string representing input integer in Roman numerals
+    """
+    output = []
+    ones = [[],['I'],['I','I'],['I','I','I'],['I','V'],['V'],['V','I'],
+    ['V','I','I'],['V','I','I','I'],['I','X']]
+    while target >= 1000:
+        output.append('M') #1000
+        target -= 1000
+    if target >= 900:
+        output.extend(['C','M']) #900
+        target -= 900
+    if target >= 500:
+        output.append('D') #500
+        target -= 500
+    if target >= 400:
+        output.extend(['C','D']) #400
+        target -= 400
+    while target >= 100:
+        output.append('C') #100
+        target -= 100
+    if target >= 90:
+        output.extend(['X','C']) #90
+        target -= 90
+    if target >= 50:
+        output.append('L') #50
+        target -= 50
+    if target >= 40:
+        output.extend(['X','L']) #40
+        target -= 40
+    while target >= 10:
+        output.append('X') #10
+        target -= 10
+    output.extend(ones[target])
+    return ''.join(output)
+
 if __name__ == '__main__':
     assert length_of_longest_substring("abcabcbb") == 3
     assert length_of_longest_substring("abcdef") == 6
@@ -224,6 +262,7 @@ if __name__ == '__main__':
     nums1 = [1]
     nums2 = [2,3]
     assert  median_of_sorted_arrays(nums1,nums2) == 2.0
+    assert  median_of_sorted_arrays(nums2,nums1) == 2.0
 
     assert max_palindromic_substring("pal") == "p"
     assert max_palindromic_substring("pallap") == "pallap"
@@ -264,5 +303,10 @@ if __name__ == '__main__':
     assert max_volume([0,2]) == 0
     assert max_volume([1,2,4,3]) == 4
     assert max_volume([2,3,4,5,18,17,6]) == 17
-
+    assert integer_to_roman(50) == "L"
+    assert integer_to_roman(55) == "LV"
+    assert integer_to_roman(0) == ""
+    assert integer_to_roman(490) == "CDXC"
+    assert integer_to_roman(4149) == "MMMMCXLIX"
+    assert integer_to_roman(10) == "X"
     print "all tests passed"
