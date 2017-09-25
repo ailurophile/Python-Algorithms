@@ -238,6 +238,42 @@ def integer_to_roman(target):
         target -= 10
     output.extend(ones[target])
     return ''.join(output)
+def longest_common_prefix(strings):
+    number_of_strings = len(strings)
+    if number_of_strings == 0:
+        return ""
+    shortest_index = 0
+    shortest = len(strings[0])
+    if shortest == 0:
+        return ""
+    index = 0
+    prefix = []
+    current_character = strings[0][0]
+    #find shortest string
+    for i,s in enumerate(strings):
+        length = len(s)
+        if length == 0:
+            return ""
+        if length < shortest:
+            shortest = length
+            shortest_index = i
+        if s[index] != current_character:
+            return "".join(prefix)
+    word = strings.pop(shortest_index)
+    prefix.append(current_character)
+    for i in range(1,shortest):
+        current_character = word[i]
+        for s in strings:
+            if s[i] != current_character:
+                return "".join(prefix)
+        prefix.append(current_character)
+    return "".join(prefix)
+
+
+
+
+
+
 
 if __name__ == '__main__':
     assert length_of_longest_substring("abcabcbb") == 3
@@ -309,4 +345,10 @@ if __name__ == '__main__':
     assert integer_to_roman(490) == "CDXC"
     assert integer_to_roman(4149) == "MMMMCXLIX"
     assert integer_to_roman(10) == "X"
+    assert longest_common_prefix(["hello","hollo"]) == "h"
+    assert longest_common_prefix(["hello","world"]) == ""
+    assert longest_common_prefix(["hello","help","helter"]) == "hel"
+    assert longest_common_prefix(["hello","world",""]) == ""
+    assert longest_common_prefix([]) == ""
+
     print "all tests passed"
