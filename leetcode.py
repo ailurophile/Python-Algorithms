@@ -271,6 +271,22 @@ def longest_common_prefix(strings):
 
 
 
+def letter_combinations(digits):
+    """
+    Input: String of digits
+    Output: All possible letter combination strings represented by the numbers
+     using mappings from telephone keys
+    """
+    digits = "".join([i for i in digits if (i != '1' and i!='0')])
+    if digits == "":
+        return []
+    letter_map = {'2':['a','b','c'], '3':['d','e','f'], '4':['g','h','i'],
+    '5':['j','k','l'], '6':['m','n','o'], '7':['p','q','r','s'],
+    '8': ['t','u','v'], '9': ['w','x','y','z']}
+    array = [[]]
+    for digit in digits:
+        array = [each + [letter] for letter in letter_map[digit]for each in array]
+    return [''.join(combo) for combo in array]
 
 
 
@@ -350,5 +366,12 @@ if __name__ == '__main__':
     assert longest_common_prefix(["hello","help","helter"]) == "hel"
     assert longest_common_prefix(["hello","world",""]) == ""
     assert longest_common_prefix([]) == ""
+    print letter_combinations("2")
+    print letter_combinations("23")
+    print letter_combinations("1204")
+    print letter_combinations("1354")
+    print letter_combinations("")
+    print letter_combinations("6789")
+
 
     print "all tests passed"
