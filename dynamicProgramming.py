@@ -248,8 +248,49 @@ def subset_sum(input_set, target_sum):
         return False
     return helper(input_set,target_sum)
 
+def fewest_coins(value, coins):
+    """
+    Input: integer value to achieve in fewest coins, coins array of integers
+    representing coin values
+    Output: integer fewest number of coins required to equal value
+    """
+    if value < 1:
+        return 0
+    coins_required = [float('inf') for _ in range(value+1)]
+    coins_required[0] = 0 #it takes no coins to make 0
+    for coin in coins:
+        for i in range(len(coins_required)):
+            if i >= coin:
+                coins_required[i] = min(coins_required[i],1+coins_required[i-coin])
+    return coins_required[value]
 
-
+def get_fewest_coins(value, coins):
+    """
+    Input: integer value to achieve in fewest coins, coins array of integers
+    representing coin values
+    Output: shortest possible array of coins required to equal input value
+    """
+    if value < 1:
+        return []
+    coins_required = [float('inf') for _ in range(value+1)]
+    coins_required[0] = 0 #it takes no coins to make 0
+    indices = [-1 for _ in range(len(coins_required))]
+    for coin in coins:
+        for i in range(len(coins_required)):
+            if i >= coin:
+                quantity = 1+coins_required[i-coin]
+                if quantity < coins_required[i]:
+                    coins_required[i] = quantity
+                    indices[i] = coin
+    results = [indices[value]]
+    if results == [-1]:
+        return []
+    target = value - results[0]
+    while target > 0:
+        next_coin = indices[target]
+        results.append(next_coin)
+        target -= next_coin
+    return results
 
 
 
@@ -356,3 +397,25 @@ if __name__ == '__main__':
     assert temp == "aba" or temp == "bab"
     assert max_palindromic_substring("cbbd") == "bb"
     assert max_palindromic_substring("abcdecba") == "a"
+    coins = [7,2,3,6]
+    assert fewest_coins(13,coins) == 2
+    assert fewest_coins(1,coins) == float('inf')
+    assert fewest_coins(3,coins) == 1
+    assert fewest_coins(11,coins) == 3
+    print get_fewest_coins(13,coins)
+    print get_fewest_coins(1,coins)
+    print get_fewest_coins(3,coins)
+    print get_fewest_coins(11,coins)
+    coins = [10,25,1,5]
+    assert fewest_coins(100,coins) == 4
+    assert fewest_coins(11,coins) == 2
+    assert fewest_coins(10,coins) == 1
+    assert fewest_coins(30,coins) == 2
+    print get_fewest_coins(13,coins)
+    print get_fewest_coins(1,coins)
+    print get_fewest_coins(3,coins)
+    print get_fewest_coins(11,coins)
+    print get_fewest_coins(100,coins)
+    print get_fewest_coins(30,coins)
+    print get_fewest_coins(-1,coins)
+    print get_fewest_coins(0,coins)
