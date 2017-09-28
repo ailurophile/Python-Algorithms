@@ -293,8 +293,22 @@ def get_fewest_coins(value, coins):
     return results
 
 
-
-
+def all_subsets(input_set):
+    """
+    Input: set
+    Output: list of sets which are all subsets of input set.
+    """
+    def subsets(member, subsets_list):
+        new_set = set([member])
+        if subsets_list == []:
+            subsets_list.append(new_set)
+            return
+        subsets_list.extend([each|new_set for each in subsets_list])
+        subsets_list.append(new_set)
+    subsets_list = []
+    for member in input_set:
+        subsets(member,subsets_list)
+    return subsets_list
 
 
 if __name__ == '__main__':
@@ -419,3 +433,8 @@ if __name__ == '__main__':
     print get_fewest_coins(30,coins)
     print get_fewest_coins(-1,coins)
     print get_fewest_coins(0,coins)
+    print all_subsets({1,2})
+    print all_subsets({1,2,3})
+    print all_subsets({1})
+    print all_subsets({})
+    print all_subsets({'a','b','c','d'})
