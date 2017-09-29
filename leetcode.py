@@ -287,8 +287,60 @@ def letter_combinations(digits):
     for digit in digits:
         array = [each + [letter] for letter in letter_map[digit]for each in array]
     return [''.join(combo) for combo in array]
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+    def append(self,node):
+        if self.next == None:
+            self.next = node
+        else:
+            n = self.next
+            while n.next:
+                n = n.next
+            n.next = node
+    def __repr__(self):
+        output = [self.val]
+        n = self.next
+        while n:
+            output.append(n.val)
+            n = n.next
+        return str(output)
+def merge_k_lists(lists):
+
+    def merge_lists(l1,l2):
+        if l1 == []:
+            return l2
+        if l2 == []:
+            return l1
+        if l1.val < l2.val:
+            output_list = l1
+            previous = l1
+            next_node = l1.next
+            to_insert = l2
+        else:
+            output_list = l2
+            previous = l2
+            next_node = l2.next
+            to_insert = l1
+        while to_insert != None:
+            while next_node != None and to_insert.val > next_node.val:
+                previous = next_node
+                next_node = next_node.next
+            if next_node == None:
+                previous.next = to_insert #append remainder of other list to end
+            else:
+                previous.next = to_insert
+                temp = to_insert.next
+                to_insert.next = next_node
+                to_insert = temp
+                previous = previous.next
+        return output_list
 
 
+    while len(lists) > 1:
+        lists.append(merge_lists(lists.pop(0),lists.pop(0)))
+    return lists[0]
 
 
 if __name__ == '__main__':
@@ -372,6 +424,20 @@ if __name__ == '__main__':
     print letter_combinations("1354")
     print letter_combinations("")
     print letter_combinations("6789")
-
+    items = [range(1,101)]
+    nodes = [ListNode(i) for i in range(1,101)]
+    list1 = nodes[0]
+    list1.append(nodes[10])
+    print "list1: %s"%list1
+    list2 = nodes[2]
+    list2.append(nodes[4])
+    print "list2: %s"%list2
+    list3 = nodes[3]
+    list3.append(nodes[5])
+    list3.append(nodes[6])
+    list3.append(nodes[7])
+    print "list3: %s"%list3
+    print merge_k_lists([list1,list2,list3])
+    print merge_k_lists([[],[]])
 
     print "all tests passed"
