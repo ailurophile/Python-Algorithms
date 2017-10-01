@@ -341,6 +341,102 @@ def merge_k_lists(lists):
     while len(lists) > 1:
         lists.append(merge_lists(lists.pop(0),lists.pop(0)))
     return lists[0]
+def is_match(input_string,pattern):
+    """
+    . matches any character
+    * matches zero or more occurences of previous character
+    Inputs: string to parse, pattern to use for comparison
+    Output: boolean, true if pattern matches
+    """
+
+    def remove_dups(full_pattern):
+        def remove_extra_asterisks(index):
+            #returns number of asterisks beginning at index of pattern
+            count = 0
+            while index < length:
+                if full_pattern[index] == "*":
+                    count += 1
+                    index += 1
+                else:
+                    break
+            return count
+        #beginning of remove_dups method
+        no_dups = []
+        i = 0
+        length = len(full_pattern)
+        #remove leading asterisks if any
+        if full_pattern[0] == "*":
+            i += 1 + remove_extra_asterisks(i+1)
+        while i < length:
+            #remove consecutive .* patterns
+            if i+1 < length and full_pattern[i:i+2] == ".*":
+                no_dups.extend(full_pattern[i:i+2])
+                i += 2 + remove_extra_asterisks(i+2)
+                while (i+1) < length  and full_pattern[i:i+2] == ".*":
+                    i += 2 + remove_extra_asterisks(i+2)
+            #remove consecutive *s
+            elif full_pattern[i] == "*":
+                no_dups.append("*")
+                i += 1 + remove_extra_asterisks(i+1)
+            else:
+                #append character to search pattern
+                no_dups.append(full_pattern[i])
+                i+= 1
+        return "".join(no_dups)
+    #beginning of is_match
+    s_length = len(input_string)
+    pattern = remove_dups(pattern)
+    p_length = len(pattern)
+    s_index = 0
+    p_index = 0
+    if p_length == 0:
+        return s_length == 0
+    if s_length == 0:
+        return pattern == "*"
+    #process entire pattern string
+    while p_index < p_length and s_index < s_length:
+        pattern_character = pattern[p_index]
+        if p_index +1 < p_length and pattern[p_index:p_index+2] == ".*":
+        #skip any number of any characters
+            p_index += 2
+            if p_index == p_length:
+                return True  #match to end of string
+            #count required number of characters before matching next character
+            number_of_characters_to_follow = 0
+            while p_index < p_length and (pattern[p_index] == "." or pattern[p_index] == "*"):
+                if pattern[p_index] == ".":
+                    number_of_characters_to_follow += 1
+                else:
+                    number_of_characters_to_follow -= 1
+                p_index += 1
+
+            #find all occurences of next character to match
+            character_to_seek = pattern[p_index]
+            character_indices = [i for i,c in enumerate(input_string) if (c ==
+            character_to_seek and i >= s_index+number_of_characters_to_follow)]
+            print "match indices: %s"%character_indices
+            for match in character_indices:
+                if is_match(input_string[match:],pattern[p_index:]):
+                    return True
+            return False
+
+        elif pattern_character == ".":
+            s_index += 1 #match any single character
+            p_index += 1
+        elif pattern_character == "*": #match any number of the previous character
+            character_to_skip = pattern[p_index-1]
+            p_index += 1
+            while s_index < s_length and input_string[s_index] == character_to_skip:
+                s_index += 1
+            if s_index == s_length: #string processed, if more pattern remains False
+                return p_index == p_length
+        else:
+            if input_string[s_index] != pattern_character:
+                return False
+            s_index += 1
+            p_index += 1
+    #False if either have characters to process still
+    return p_index == p_length and s_index == s_length
 
 
 if __name__ == '__main__':
@@ -439,5 +535,25 @@ if __name__ == '__main__':
     print "list3: %s"%list3
     print merge_k_lists([list1,list2,list3])
     print merge_k_lists([[],[]])
+    assert is_match("abc","a*b.") == True
+    assert is_match("abc","abc") == True
+    assert is_match("abc","*a*****b.*.*") == True
+    assert is_match("abc","*****.*.*") == True
+    assert is_match("abcd","a*b.") == False
+    assert is_match("abcd","a*b.*") == True
+    assert is_match(".",".") == True
+    assert is_match("r",".") == True
+    assert is_match("rv",".") == False
+    assert is_match(".","*") == False
+    assert is_match("","*") == True
+    assert is_match("abcdabaja","a.*a") == True
+    assert is_match("abcdabaja","a.*...a") == True
+    assert is_match("abcdabaja","a.*...d.*") == False
+    assert is_match("abcdabaja","a.*...*d.*") == True
+    assert is_match("abcdabaja","a.*.ja") == True
+    assert is_match("abcdabaja","a.*ja") == True
+
+
+
 
     print "all tests passed"
