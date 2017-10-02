@@ -365,8 +365,8 @@ def is_match(input_string,pattern):
         i = 0
         length = len(full_pattern)
         #remove leading asterisks if any
-        if full_pattern[0] == "*":
-            i += 1 + remove_extra_asterisks(i+1)
+#        if full_pattern[0] == "*":
+#            i += 1 + remove_extra_asterisks(i+1)
         while i < length:
             #remove consecutive .* patterns
             if i+1 < length and full_pattern[i:i+2] == ".*":
@@ -391,8 +391,9 @@ def is_match(input_string,pattern):
     p_index = 0
     if p_length == 0:
         return s_length == 0
-    if s_length == 0:
-        return pattern == "*"
+    if s_length == 0 or pattern[0] == "*":
+        return False
+#        return pattern == "*"
     #process entire pattern string
     while p_index < p_length and s_index < s_length:
         pattern_character = pattern[p_index]
@@ -437,6 +438,7 @@ def is_match(input_string,pattern):
             p_index += 1
     #False if either have characters to process still
     return p_index == p_length and s_index == s_length
+
 
 
 if __name__ == '__main__':
@@ -537,15 +539,16 @@ if __name__ == '__main__':
     print merge_k_lists([[],[]])
     assert is_match("abc","a*b.") == True
     assert is_match("abc","abc") == True
-    assert is_match("abc","*a*****b.*.*") == True
-    assert is_match("abc","*****.*.*") == True
+    assert is_match("abc","a*****b.*.*") == True
+    assert is_match("abc","*a*****b.*.*") == False
+    assert is_match("abc",".*****.*.*") == True
     assert is_match("abcd","a*b.") == False
     assert is_match("abcd","a*b.*") == True
     assert is_match(".",".") == True
     assert is_match("r",".") == True
     assert is_match("rv",".") == False
     assert is_match(".","*") == False
-    assert is_match("","*") == True
+    assert is_match("",".*") == False
     assert is_match("abcdabaja","a.*a") == True
     assert is_match("abcdabaja","a.*...a") == True
     assert is_match("abcdabaja","a.*...d.*") == False
