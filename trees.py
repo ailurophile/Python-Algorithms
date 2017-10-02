@@ -43,7 +43,7 @@ class TreeNode(object):
             out = out + " left: "+ str(self.left.data)
         if self.right != None:
             out = out + " right: "+ str(self.right.data)
-        return out 
+        return out
 def makeBinarySearchTree(inputList):
     length = len(inputList)
     if length == 0:
@@ -62,7 +62,7 @@ class Node(object):
         self.data = data
         self.previous = previous
         self.nextNode = None
-        
+
 class DoubleLinkedList(object):
     def __init__(self, head=None, tail = None):
         self.head = head
@@ -70,7 +70,7 @@ class DoubleLinkedList(object):
             self.tail = self.head
         else:
             self.tail = tail
-        
+
     def __str__(self):
         out = []
         if self.head == None: return''
@@ -80,7 +80,7 @@ class DoubleLinkedList(object):
             ptr = ptr.nextNode
         out.append(ptr.data)
         return str(out)
-    
+
     def addData(self,data):
         node = Node(data,self.tail)
         if self.head == None:
@@ -91,12 +91,12 @@ class DoubleLinkedList(object):
 def linkedListsTreeLevels(root):
     powerOfTwo = (2**i for i in range(MAX_TREE_DEPTH))
     outputLists = []
-    
+
     levelCount = next(powerOfTwo)
     openList = [root]
     output = DoubleLinkedList()
-    while len(openList) > 0:        
-        currentNode = openList.pop(0)        
+    while len(openList) > 0:
+        currentNode = openList.pop(0)
         if currentNode.left != None:
             openList.append(currentNode.left)
         if currentNode.right != None:
@@ -120,7 +120,7 @@ def getDepth(tree):
         left = getDepth(tree.left)
         left_height = depth(left) + 1
         left_balanced = balanced(left)
-        
+
     if tree.right == None:
         right_height = 0
         right_balanced = True
@@ -128,7 +128,7 @@ def getDepth(tree):
         right = getDepth(tree.right)
         right_height = depth(right) + 1
         right_balanced = balanced(right)
-        
+
     height = max(left_height, right_height)
     if left_balanced and right_balanced:
         return (height, abs(left_height - right_height) <2)
@@ -171,10 +171,14 @@ def DFS(tree,n):
     return False
 # is currend node one of the children being sought?
 def FCA(root,a,b):
-    if root == None: 
+    """
+    Find common ancestor of a & b.  Note can be a or b if one is descendant of
+    the other.  Returns None if neither found.
+    """
+    if root == None:
         return None
     #print "root = %s" %root.data
-    if (root.data == a) or (root.data == b): 
+    if (root.data == a) or (root.data == b):
         return root.data
     if DFS(root.right,a):
         #print "a found right"
@@ -203,13 +207,34 @@ def FCA(root,a,b):
             return a       #b not in tree
     else:  #a not in tree
         if DFS(root, b):
-            return b    
+            return b
         else:
             return None
-    
+def level_sum_BST(tree):
+    """
+    Input: Binary Search Tree
+    Output: Integer array of sums by level of index
+    """
+    def level_sum_helper(tree, level, sums):
+        if tree == None:
+            return
+        if level == len(sums):
+            sums.append(tree.data)
+        else:
+            sums[level] += tree.data
+        level_sum_helper(tree.left, level + 1, sums)
+        level_sum_helper(tree.right, level + 1, sums)
+
+    #beginning of level_sum_BST
+    if tree == None:
+        return []
+    sums = [tree.data]
+    level_sum_helper(tree.left, 1, sums)
+    level_sum_helper(tree.right, 1, sums)
+    return sums
 if __name__ == '__main__':
-    
-    
+
+
     tree = TreeNode(3)
     tree.left = TreeNode(2)
     tree.left.right = TreeNode(10)
@@ -224,11 +249,11 @@ if __name__ == '__main__':
     print FCA(bigTree,4,11)
     print FCA(bigTree,5,2)
     print FCA(bigTree,12,13)
-    """"
+    """
     print getDepth(tree)
     print isBST(tree)
     print inOrderIsBST(tree)
-    
+
     number1 = DoubleLinkedList(Node(7))
     number1.addData(1)
     number1.addData(7)
@@ -242,7 +267,8 @@ if __name__ == '__main__':
     G = make_link(G,0,4)
     print route_between(G,1,4)
     print G
-    arrays = [[0],[1,2],[1,2,3,4,5,6,7],[1,2,3,4,5,6],[1,2,3,4,5,6,7,8,9]]  
+    """
+    arrays = [[0],[1,2],[1,2,3,4,5,6,7],[1,2,3,4,5,6],[1,2,3,4,5,6,7,8,9]]
     arrays2 = [[1,2,3,4],[1,2,3]]
     for array in arrays:
         BinaryTree = makeBinarySearchTree(array)
@@ -250,8 +276,10 @@ if __name__ == '__main__':
         #print type(BinaryTree)
         print BinaryTree.displayall()
         tree = BinaryTree
-        #print tree
+        print tree
+        print level_sum_BST(tree)
+        """
         lists= linkedListsTreeLevels(tree)
         for l in lists:
             print l
-       """     
+       """
