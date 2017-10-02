@@ -232,6 +232,33 @@ def level_sum_BST(tree):
     level_sum_helper(tree.left, 1, sums)
     level_sum_helper(tree.right, 1, sums)
     return sums
+
+def level_average_BST(tree):
+    """
+    Input: Binary Search Tree
+    Output: Integer array of averages by level of index
+    """
+    def level_average_helper(tree, level, sums, members):
+        if tree == None:
+            return
+        if level == len(sums):
+            sums.append(tree.data)
+            members.append(1)
+        else:
+            sums[level] += tree.data
+            members[level] += 1
+        level_average_helper(tree.left, level +1,sums, members )
+        level_average_helper(tree.right, level +1,sums, members )
+    #beginning of level_average_BST
+    if tree == None:
+        return []
+    sums = [tree.data]
+    members = [1]
+    level_average_helper(tree.left, 1, sums, members)
+    level_average_helper(tree.right, 1, sums, members)
+    for i in range(len(sums)):
+        sums[i] = sums[i]*1.0/members[i]
+    return sums
 if __name__ == '__main__':
 
 
@@ -278,6 +305,8 @@ if __name__ == '__main__':
         tree = BinaryTree
         print tree
         print level_sum_BST(tree)
+        print level_average_BST(tree)
+        print FCA(tree, 1,2)
         """
         lists= linkedListsTreeLevels(tree)
         for l in lists:
