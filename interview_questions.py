@@ -1,3 +1,4 @@
+import random
 """ Move non-zeros to the start of the array in as few writes as possible
 [1, 0, 3, 1, 2, 0, 5, 0] => [1, 1, 3, 5, 2, ?, ?, ?]
 """
@@ -44,7 +45,7 @@ def numberOfInterpretations(numberString):
 def interpretation_count(numberString,counts):
     if  numberString == "":
         return 0
-    digit = int(numberString[0])
+    digit = int(numberString[0:1])
     if digit == 0:
         return 0
     num = int(numberString)
@@ -54,12 +55,66 @@ def interpretation_count(numberString,counts):
         return 2
     index = len(numberString) - 1
     if counts[index] == None:
-        count =  numberOfInterpretations(numberString[1:])
+        count =  interpretation_count(numberString[1:],counts)
         digits = int(numberString[0:2])
         if digits < 27:
-            count += numberOfInterpretations(numberString[2:])
+            count += interpretation_count(numberString[2:],counts)
         counts[index] = count
     return counts[index]
+"""
+We will be implementing a modified version of the board game Set.  Our Set deck contains 27 cards
+with three attributes each: shape, number, and fill.  Possible values are:
+    shapes = ["oval", "squiggle", "diamond"]
+    shading = ["solid","striped","open"]
+    counts = [1,2,3]
+
+Create a class that models a set card and provides a method to print itself.
+Create a SetGame class.  On initialization generate a deck of Set cards stored within the class
+instance.  Order is unimportant.
+
+Edit SetGame to track the cards on the table in an instnace variable, table, & provide a deal(num_cards)
+method to deal random cards.
+
+Write a function is_set() that accepts three cards and returns a boolean indicating whether for each attribute
+all cards match or all cards differ.
+"""
+class Card:
+    def __init__(self,shape,fill,count):
+        self.shape = shape
+        self.fill = fill
+        self.count = count
+
+    def __repr__(self):
+        return "shape: %s, fill: %s, count: %s" %(self.shape,self.fill,self.count)
+class SetGame(object):
+    def __init__(self):
+        self.deck = []
+        self.table = []
+        shapes = ["oval", "squiggle", "diamond"]
+        shading = ["solid","striped","open"]
+        counts = [1,2,3]
+        for shape in shapes:
+            for shade in shading:
+                for count in counts:
+                    card = Card(shape,shade,count)
+                    self.deck.append(card)
+    def deal(self,num_cards):
+        for i in range(min(num_cards,len(self.deck))):
+            total = len(self.deck)
+            index = random.randint(0,total-1)
+            self.table.append(self.deck.pop(index))
+    def is_set(self,card):
+        cards = [card1,card2,card3]
+        shapes = set()
+        fills = set()
+        counts = set()
+        for card in cards:
+            shapes.add(card.shape)
+            fills.add(card.fill)
+            counts.add(card.count)
+        if (len(shapes == 2) or len(fills == 2) or len(counts == 2)):
+            return False
+        return True
 
 if __name__ == "__main__":
     arr = [1, 0, 3, 1, 2, 0, 5, 0]
@@ -73,3 +128,8 @@ if __name__ == "__main__":
     print numberOfInterpretations('00')
     print numberOfInterpretations('200')
     print numberOfInterpretations('202')
+    game = SetGame()
+    print game.deck
+    game.deal(4)
+    for card in game.table:
+        print card
