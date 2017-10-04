@@ -366,9 +366,6 @@ def is_match(input_string,pattern):
         no_dups = []
         i = 0
         length = len(full_pattern)
-        #remove leading asterisks if any
-#        if full_pattern[0] == "*":
-#            i += 1 + remove_extra_asterisks(i+1)
         while i < length:
             #remove consecutive .* patterns
             if i+1 < length and full_pattern[i:i+2] == ".*":
@@ -391,13 +388,14 @@ def is_match(input_string,pattern):
     p_length = len(pattern)
     s_index = 0
     p_index = 0
+    print "text: %s, pattern: %s"%(input_string,pattern)
     if p_length == 0:
         return s_length == 0
-    if s_length == 0 or pattern[0] == "*":
+    if (s_length == 0 and pattern!= ".*") or pattern[0] == "*":
         return False
-#        return pattern == "*"
     #process entire pattern string
     while p_index < p_length and s_index < s_length:
+        print "p_index: %s, s_index: %s"%(p_index,s_index)
         pattern_character = pattern[p_index]
         if p_index +1 < p_length and pattern[p_index:p_index+2] == ".*":
         #skip any number of any characters
@@ -412,6 +410,8 @@ def is_match(input_string,pattern):
                 else:
                     number_of_characters_to_follow -= 1
                 p_index += 1
+            if p_index == p_length:
+                return (s_length - s_index) >= number_of_characters_to_follow
 
             #find all occurences of next character to match
             character_to_seek = pattern[p_index]
@@ -426,19 +426,98 @@ def is_match(input_string,pattern):
             s_index += 1 #match any single character
             p_index += 1
         elif pattern_character == "*": #match any number of the previous character
+            s_index -= 1
+            skip_index_start = s_index
             character_to_skip = pattern[p_index-1]
             p_index += 1
             while s_index < s_length and input_string[s_index] == character_to_skip:
                 s_index += 1
+            if p_index == p_length:
+                return s_index == s_length
+            #check for match skipping various numbers of character_to_skip
+            number_of_possibles = s_index - skip_index_start
+            for i in range(skip_index_start, skip_index_start+number_of_possibles):
+                if is_match(input_string[i:],pattern[p_index:]):
+                    return True
+            if number_of_possibles == 0:
+                s_index += 1 #restore index if no advancing occurred
             if s_index == s_length: #string processed, if more pattern remains False
                 return p_index == p_length
         else:
             if input_string[s_index] != pattern_character:
-                return False
+                possible_star = p_index+1
+                s_index -= 1 #want to stay on this character so prepare for advance by subtracting
+                if (possible_star >= p_length) or (pattern[possible_star] != "*"):
+                    return False
+                else:
+                    p_index += 1
+
             s_index += 1
             p_index += 1
     #False if either have characters to process still
     return p_index == p_length and s_index == s_length
+def isMatch(input_string,pattern):
+    """
+    . matches any character
+    * matches zero or more occurences of previous character
+    Inputs: string to parse, pattern to use for comparison
+    Output: boolean, true if pattern matches
+    """
+    def remove_dups(full_pattern):
+        def remove_extra_asterisks(index):
+            #returns number of asterisks beginning at index of pattern
+            count = 0
+            while index < length:
+                if full_pattern[index] == "*":
+                    count += 1
+                    index += 1
+                else:
+                    break
+            return count
+        #beginning of remove_dups method
+        no_dups = []
+        i = 0
+        length = len(full_pattern)
+        while i < length:
+            #remove consecutive .* patterns
+            if i+1 < length and full_pattern[i:i+2] == ".*":
+                no_dups.extend(full_pattern[i:i+2])
+                i += 2 + remove_extra_asterisks(i+2)
+                while (i+1) < length  and full_pattern[i:i+2] == ".*":
+                    i += 2 + remove_extra_asterisks(i+2)
+            #remove consecutive *s
+            elif full_pattern[i] == "*":
+                no_dups.append("*")
+                i += 1 + remove_extra_asterisks(i+1)
+            else:
+                #append character to search pattern
+                no_dups.append(full_pattern[i])
+                i+= 1
+        return "".join(no_dups)
+        #beginning of isMatch
+    pattern = remove_dups(pattern)
+    p_length = len(pattern)
+    s_length = len(input_string)
+    if p_length == 0:
+        return s_length == 0
+    if len(pattern) == 1:
+        if pattern == ".":
+            return len(input_string) == 1
+        else:
+            return pattern == input_string
+    else:
+        pattern_first = pattern[0]
+#        if ((pattern_first == ".") or ((s_length > 0) and pattern_first == input_string[0])):
+        if ((s_length > 0) and ((pattern_first == ".") or ( pattern_first == input_string[0]))):
+            if pattern[1] == "*":
+                return (isMatch(input_string, pattern[2:])
+                or isMatch(input_string[1:],pattern))
+            else:
+                return isMatch(input_string[1:],pattern[1:])
+        elif pattern[1] == "*":
+            return isMatch(input_string, pattern[2:])
+        else:
+            return False
 
 def least_intervals(jobs,recovery):
     """
@@ -568,6 +647,14 @@ if __name__ == '__main__':
     print merge_k_lists([list1,list2,list3])
     print merge_k_lists([[],[]])
     assert is_match("abc","a*b.") == True
+    assert is_match("aaa","a*a") == True
+#    """
+    assert is_match("aaa","ab*a") == False
+    assert is_match("aaa","ab*ac*a") == True
+    assert is_match("aaa","ab*a*c*a") == True
+
+    assert is_match("aab","c*a*b") == True
+    assert is_match("ab",".*..") == True
     assert is_match("abc","abc") == True
     assert is_match("abc","a*****b.*.*") == True
     assert is_match("abc","*a*****b.*.*") == False
@@ -585,6 +672,33 @@ if __name__ == '__main__':
     assert is_match("abcdabaja","a.*...*d.*") == True
     assert is_match("abcdabaja","a.*.ja") == True
     assert is_match("abcdabaja","a.*ja") == True
+    assert isMatch("abc","a.c") == True
+    assert isMatch("abc","..d") == False
+    assert isMatch("abc","a*b.") == True
+    assert isMatch("aaa","a*a") == True
+    assert isMatch("aaa","ab*a") == False
+    assert isMatch("aaa","ab*ac*a") == True
+    assert isMatch("aaa","ab*a*c*a") == True
+    assert isMatch("aab","c*a*b") == True
+    assert isMatch("ab",".*..") == True
+    assert isMatch("abc","abc") == True
+    assert isMatch("abc","a*****b.*.*") == True
+    assert isMatch("abc","*a*****b.*.*") == False
+    assert isMatch("abc",".*****.*.*") == True
+    assert isMatch("abcd","a*b.*") == True
+    assert isMatch(".",".") == True
+    assert isMatch("r",".") == True
+    assert isMatch("rv",".") == False
+    assert isMatch(".","*") == False
+    assert isMatch("",".*") == True
+    assert isMatch("abcdabaja","a.*a") == True
+    assert isMatch("abcdabaja","a.*...a") == True
+    assert isMatch("abcdabaja","a.*...a.*") == True
+    assert isMatch("abcdabaja","a.*...d.*") == False #causes overflow w/o memo
+    assert isMatch("abcdabaja","a.*...*d.*") == True
+    assert isMatch("abcdabaja","a.*.ja") == True
+    assert isMatch("abcdabaja","a.*ja") == True
+    assert isMatch("aaaaaaaaaaaaab","a*a*a*a*a*a*a*a*a*a*c") == False
     assert least_intervals(['A','A','B','B','A'],1) == 5
     assert least_intervals(['A','A','B','B','A'],2) == 7
     assert least_intervals(['A','A','B','B','A'],0) == 5
@@ -650,7 +764,7 @@ if __name__ == '__main__':
     'E','H','E','D','E','J','B','G','I','J','C','H','C','C','A','A','B','C','G',
     'B','D','I','D','E','H','J','J','B','F','E','J','H','H','I','G','B','D'],
     1) == 1000
-
+#    """
 
 
 
