@@ -549,8 +549,36 @@ def least_intervals(jobs,recovery):
             break
     return wait_intervals + all_jobs - min(during_recovery,wait_intervals)
 
-
+def max_subarray_sum(array):
+    """
+    Input: array of numbers
+    Output: number indicating the value of the maximum sum of a subarray of the
+    input array
+    """
+    length = len(array)
+    if length == 0:
+        return None
+    current_max = array[0]
+    current_sum = array[0]
+    #find first positive value if any
+    i = 1
+    while i < length and current_max < 0:
+        current_sum = array[i]
+        if current_sum > current_max:
+            current_max = current_sum
+        i += 1
+    #check if all values were negative
+    if i == length:
+        return current_max #return least negative number
+    for index in range(i,length):
+        current_sum += array[index]
+        if current_sum > current_max:
+            current_max = current_sum
+        elif current_sum < 0:
+            current_sum = 0
+    return current_max
 if __name__ == '__main__':
+    """
     assert length_of_longest_substring("abcabcbb") == 3
     assert length_of_longest_substring("abcdef") == 6
     assert length_of_longest_substring("abbb") == 2
@@ -648,7 +676,7 @@ if __name__ == '__main__':
     print merge_k_lists([[],[]])
     assert is_match("abc","a*b.") == True
     assert is_match("aaa","a*a") == True
-#    """
+#
     assert is_match("aaa","ab*a") == False
     assert is_match("aaa","ab*ac*a") == True
     assert is_match("aaa","ab*a*c*a") == True
@@ -764,7 +792,14 @@ if __name__ == '__main__':
     'E','H','E','D','E','J','B','G','I','J','C','H','C','C','A','A','B','C','G',
     'B','D','I','D','E','H','J','J','B','F','E','J','H','H','I','G','B','D'],
     1) == 1000
-#    """
+    """
+    assert max_subarray_sum([-2,1,-3,4,-1,2,1,-5,4]) == 6
+    assert max_subarray_sum([-2,-1,-3,-4,-1,-2,-1,-5,-4]) == -1
+    assert max_subarray_sum([-2,1,-3,-4,-1,-2,1,-5]) == 1
+    assert max_subarray_sum([-2,5,-3,4,-1,1,-5,4]) == 6
+    assert max_subarray_sum([2,1,3,4,1,2,1,5,4]) == 23
+    assert max_subarray_sum([2,1,3,4,1,2,1,5,-4]) == 19
+    assert max_subarray_sum([2,1,3,4.5,1,2,1,5,-4]) == 19.5
 
 
 
