@@ -45,8 +45,8 @@ def numberOfInterpretations(numberString):
 def interpretation_count(numberString,counts):
     if  numberString == "":
         return 0
-    digit = int(numberString[0:1])
-    if digit == 0:
+    digits = int(numberString[0:2])
+    if digits == 0:
         return 0
     num = int(numberString)
     if  num < 11 or num == 20:
@@ -56,7 +56,7 @@ def interpretation_count(numberString,counts):
     index = len(numberString) - 1
     if counts[index] == None:
         count =  interpretation_count(numberString[1:],counts)
-        digits = int(numberString[0:2])
+#        digits = int(numberString[0:2])
         if digits < 27:
             count += interpretation_count(numberString[2:],counts)
         counts[index] = count
@@ -127,6 +127,7 @@ if __name__ == "__main__":
     print numberOfInterpretations('1119')
     print numberOfInterpretations('00')
     print numberOfInterpretations('200')
+    print numberOfInterpretations('2002')
     print numberOfInterpretations('202')
     game = SetGame()
     print game.deck
