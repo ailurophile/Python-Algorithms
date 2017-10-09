@@ -300,9 +300,6 @@ def all_subsets(input_set):
     """
     def subsets(member, subsets_list):
         new_set = set([member])
-        if subsets_list == []:
-            subsets_list.append(new_set)
-            return
         subsets_list.extend([each|new_set for each in subsets_list])
         subsets_list.append(new_set)
     subsets_list = []
