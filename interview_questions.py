@@ -56,11 +56,34 @@ def interpretation_count(numberString,counts):
     index = len(numberString) - 1
     if counts[index] == None:
         count =  interpretation_count(numberString[1:],counts)
-#        digits = int(numberString[0:2])
         if digits < 27:
             count += interpretation_count(numberString[2:],counts)
         counts[index] = count
     return counts[index]
+def longest_contiguous_increasing_sequence(array):
+    """
+    Input: array of numbers
+    Output: Integer representing the lengthe of the longest contiguous increasing
+    sequence in the input array.
+    """
+    length = len(array)
+    if length <2:
+        return length
+    max_so_far = 1
+    count = 1
+    back = length - 2
+    while back >= 0:
+        if array[back] < array[back+1]:
+            count += 1
+            if count > max_so_far:
+                max_so_far = count
+        else:
+            count = 1
+        back -= 1
+    return max_so_far
+
+
+
 """
 We will be implementing a modified version of the board game Set.  Our Set deck contains 27 cards
 with three attributes each: shape, number, and fill.  Possible values are:
@@ -83,7 +106,6 @@ class Card:
         self.shape = shape
         self.fill = fill
         self.count = count
-
     def __repr__(self):
         return "shape: %s, fill: %s, count: %s" %(self.shape,self.fill,self.count)
 class SetGame(object):
@@ -117,6 +139,7 @@ class SetGame(object):
         return True
 
 if __name__ == "__main__":
+    """
     arr = [1, 0, 3, 1, 2, 0, 5, 0]
     removeZeros(arr)
     print arr
@@ -134,3 +157,10 @@ if __name__ == "__main__":
     game.deal(4)
     for card in game.table:
         print card
+    """
+    assert longest_contiguous_increasing_sequence([7,2,3,6,5,6,4]) == 3
+    assert longest_contiguous_increasing_sequence([]) == 0
+    assert longest_contiguous_increasing_sequence([7]) == 1
+    assert longest_contiguous_increasing_sequence([7,2,3,6,5,6,8,9,10]) == 5
+    assert longest_contiguous_increasing_sequence([1,2,3,5,6,4]) == 5
+    assert longest_contiguous_increasing_sequence([1,2,3,5,6]) == 5
