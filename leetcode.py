@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict
 
 def length_of_longest_substring(s):
     """
@@ -577,6 +577,45 @@ def max_subarray_sum(array):
         elif current_sum < 0:
             current_sum = 0
     return current_max
+
+def redundant_connection(edges):
+    """
+    The given input is a graph that started as a tree with N nodes (with distinct
+    values 1, 2, ..., N), with one additional edge added. The added edge has two
+    different vertices chosen from 1 to N, and was not an edge that already existed.
+    The resulting graph is given as a 2D-array of edges. Each element of edges is a
+    pair [u, v] with u < v, that represents an undirected edge connecting nodes u and
+    v. Return an edge that can be removed so that the resulting graph is a tree of N
+    nodes. If there are multiple answers, return the answer that occurs last in the
+    given 2D-array. The answer edge [u, v] should be in the same format, with u < v.
+    """
+    def is_path_between(node1,node2):
+        open_list = graph[node1][:]
+        visited  = [node1]
+        while len(open_list) > 0:
+            next_node = open_list.pop()
+            for each in graph[next_node]:
+                if each == node2:
+                    return True
+                if each not in visited:
+                    open_list.append(each)
+        return False #did not reach node2
+    #beginning redundant_connection
+    if len(edges) < 2:
+        return []
+    redundant = []
+    graph = defaultdict(list)
+    #check if new edge will create a loop
+    for u,v in edges:
+        if u in graph and v in graph and is_path_between(u,v):
+            redundant.append([u,v])
+        graph[u].append(v)
+        graph[v].append(u)
+    return redundant[-1] if len(redundant) != 0 else []
+
+
+
+
 if __name__ == '__main__':
     """
     assert length_of_longest_substring("abcabcbb") == 3
@@ -800,6 +839,11 @@ if __name__ == '__main__':
     assert max_subarray_sum([2,1,3,4,1,2,1,5,4]) == 23
     assert max_subarray_sum([2,1,3,4,1,2,1,5,-4]) == 19
     assert max_subarray_sum([2,1,3,4.5,1,2,1,5,-4]) == 19.5
+    print "testing redundant_connection"
+    assert redundant_connection([[1,2], [1,3], [2,3]]) == [2,3]
+    assert redundant_connection([[1,2], [1,3], [2,4]]) == []
+    assert redundant_connection([[1,2], [2,3], [3,4], [1,4], [1,5]]) == [1,4]
+    assert redundant_connection([[1,2], [2,3], [3,4], [1,4], [1,5],[2,5]]) == [2,5]
 
 
 
